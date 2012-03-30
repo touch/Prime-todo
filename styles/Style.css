@@ -1,0 +1,21 @@
+@import url('BasicStyle.css');
+@manifest url('style.xml');
+
+Button			{ background: #aaa; color: #fff; skin: Class( primevc.gui.components.skins.ButtonLabelSkin ); }
+Button:hover	{ background: #faa; color: #000; }
+
+TodoGUI 			{background: #CCCCCC; width:100%; height:100%; algorithm: float-ver(top,left); }
+
+TodoGUI #title {width:100%; text-align:center; font: Verdana 50px
+; }
+TodoGUI #input {width:80%; text-align:center; font: Verdana 40px; }
+TodoGUI #input:hover {width:80%; text-align:center; font: Verdana 40px; }
+
+TodoGUI #listview  {width:100%; height:60%; background: #FFCCCC; algorithm: float-ver( top, left );}
+
+ListRow { algorithm: float-hor;}
+
+
+
+
+

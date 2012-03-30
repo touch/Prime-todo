@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<componentPackage>
+	<component id="TodoGUI"		superClass="UIWindow"			fullname="com.ezeql.primevc.examples.todoapp.TodoGUI" />
+	<component id="ListRow"		superClass="UIDataContainer"			fullname="com.ezeql.primevc.examples.todoapp.ListRow" />
+
+	
+<!--<component id=""	superClass=""	fullname="cases." />-->
+</componentPackage>

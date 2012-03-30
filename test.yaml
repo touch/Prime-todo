@@ -1,0 +1,27 @@
+languages:
+  dutch:
+    apptitle: AppTitle NL
+    opentask: open taken
+    removetask: verwijder taak
+    addtask: taak toevoegen
+    ok: ok
+    no: no
+    morning: goedemorgen
+  english:
+    apptitle: AppTitle English
+    opentask: Open Tasks
+    removetask: Remove Task
+    addtask: Add Task
+    ok: ok
+    no: no
+    morning: GoodMorning
+  spanish:
+    apptitle: AppTitle Spanish
+    opentask: Abrir Tarea
+    removetask: Remover Tarea
+    addtask: Agregar Tarea
+    ok: Ok
+    no: no
+    morning: Buen Dia
+	
+	

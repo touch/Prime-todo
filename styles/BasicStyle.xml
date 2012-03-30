@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<componentPackage>
+	
+	<!-- Core Elements -->
+	<component id="IDisplayObject"			superClass=""					fullname="primevc.gui.display.IDisplayObject" />
+	<component id="UIBitmap"				superClass="IDisplayObject"		fullname="primevc.gui.core.UIBitmap" />
+	<component id="UIComponent"				superClass="IDisplayObject"		fullname="primevc.gui.core.UIComponent" />
+	<component id="UIContainer"				superClass="UIComponent"		fullname="primevc.gui.core.UIContainer" />
+	<component id="UIDataComponent"			superClass="UIComponent"		fullname="primevc.gui.core.UIDataComponent" />
+	<component id="UIDataContainer"			superClass="UIDataComponent"	fullname="primevc.gui.core.UIDataContainer" />
+	<component id="UIGraphic"				superClass="IDisplayObject"		fullname="primevc.gui.core.UIGraphic" />
+	<component id="UITextField"				superClass="IDisplayObject"		fullname="primevc.gui.core.UITextField" />
+	<component id="UIVideo"					superClass="IDisplayObject"		fullname="primevc.gui.core.UIVideo" />
+	<component id="UIWindow"				superClass="IDisplayObject"		fullname="primevc.gui.core.UIWindow" />
+	
+	<!-- Default Components -->
+	<component id="AudioPlayer"				superClass="UIDataContainer"	fullname="primevc.gui.components.AudioPlayer" />
+	<component id="Button"					superClass="UIDataContainer"	fullname="primevc.gui.components.Button" />
+	<component id="ComboBox"				superClass="DataButton"			fullname="primevc.gui.components.ComboBox" />
+	<component id="ColorPicker"				superClass="UIDataContainer"	fullname="primevc.gui.components.ColorPicker" />
+	<component id="DataButton"				superClass="Button"				fullname="primevc.gui.components.DataButton" />
+
+	<component id="AlertPanel"				superClass="Panel"				fullname="primevc.gui.components.AlertPanel" />
+	<component id="ConfirmPanel"			superClass="AlertPanel"			fullname="primevc.gui.components.ConfirmPanel" />
+	<component id="Panel"					superClass="UIContainer"		fullname="primevc.gui.components.Panel" />
+	<component id="UploadPanel"				superClass="ConfirmPanel"		fullname="primevc.gui.components.UploadPanel" />
+
+	<component id="DebugBar"				superClass="UIContainer"		fullname="primevc.gui.components.DebugBar" />
+	<component id="Image"					superClass="UIGraphic"			fullname="primevc.gui.components.Image" />
+	<component id="InputField"				superClass="DataButton"			fullname="primevc.gui.components.InputField" />
+	<component id="Label"					superClass="UIDataComponent"	fullname="primevc.gui.components.Label" />
+	<component id="ListHolder"				superClass="UIDataContainer"	fullname="primevc.gui.components.ListHolder" />
+	<component id="ListPanel"				superClass="Panel"				fullname="primevc.gui.components.ListPanel" />
+	<component id="ListView"				superClass="UIDataContainer"	fullname="primevc.gui.components.ListView" />
+	<component id="ProgressBar"				superClass="UIDataContainer"	fullname="primevc.gui.components.ProgressBar" />
+	<component id="ScrollBar"				superClass="SliderBase"			fullname="primevc.gui.components.ScrollBar" />
+	<component id="SelectableListView"		superClass="ListView"       	fullname="primevc.gui.components.SelectableListView" />
+	<component id="SliderBase"				superClass="UIDataContainer"	fullname="primevc.gui.components.SliderBase" />
+	<component id="Slider"					superClass="SliderBase"			fullname="primevc.gui.components.Slider" />
+	<component id="TextArea"				superClass="InputField"			fullname="primevc.gui.components.TextArea" />
+	<component id="ToggleGroup"				superClass="UIContainer"		fullname="primevc.gui.components.ToggleGroup" />
+	<component id="VideoControlBar"			superClass="UIContainer"		fullname="primevc.gui.components.VideoControlBar" />
+	<component id="VideoPlayer"				superClass="UIDataContainer"	fullname="primevc.gui.components.VideoPlayer" />
+	
+	<!-- Skins -->
+	<component id="Skin"					superClass=""					fullname="primevc.gui.core.Skin" />
+	<component id="BasicPanelSkin"			superClass="Skin"				fullname="primevc.gui.components.skins.BasicPanelSkin" />
+	<component id="ButtonAudioPlayerSkin"	superClass="Skin"				fullname="primevc.gui.components.skins.ButtonAudioPlayerSKin" />
+	<component id="ButtonIconLabelSkin"		superClass="Skin"				fullname="primevc.gui.components.skins.ButtonIconLabelSkin" />
+	<component id="ButtonIconSkin"			superClass="Skin"				fullname="primevc.gui.components.skins.ButtonIconSkin" />
+	<component id="ButtonLabelSkin"			superClass="Skin"				fullname="primevc.gui.components.skins.ButtonLabelSkin" />
+	<component id="CircleProgressSkin"		superClass="Skin"				fullname="primevc.gui.components.skins.CircleProgressSkin" />
+	<component id="InputFieldSkin"			superClass="Skin"				fullname="primevc.gui.components.skins.InputFieldSkin" />
+	<component id="LinearProgressLabelSkin"	superClass="LinearProgressSkin"	fullname="primevc.gui.components.skins.LinearProgressLabelSkin" />
+	<component id="LinearProgressSkin"		superClass="Skin"				fullname="primevc.gui.components.skins.LinearProgressSkin" />
+	<component id="MovablePanelSKin"		superClass="BasicPanelSkin"		fullname="primevc.gui.components.skins.MovablePanelSKin" />
+	<component id="SlidingToggleButtonSkin"	superClass="Skin"				fullname="primevc.gui.components.skins.SlidingToggleButtonSkin" />
+	
+<!--<component id=""	superClass=""	fullname="" />-->
+</componentPackage>
