@@ -27,8 +27,8 @@ class TodoFacade extends Facade < TodoEvents, TodoModel, IDisposable, TodoContro
 	
 	private function test(neww,old) 
 	{
-		trace(neww);
-		trace(old);
+		//trace(neww);
+		//trace(old);
 	}
 	
 	override private function setupModel ()			{ model			= new TodoModel(); } 

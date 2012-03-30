@@ -1,6 +1,7 @@
 package com.ezeql.primevc.examples.todoapp;
 import primevc.core.Bindable;
 import primevc.gui.components.Button;
+import primevc.gui.components.DataButton;
 import primevc.gui.components.Label;
 import primevc.gui.core.UIDataContainer;
 
@@ -14,7 +15,7 @@ private typedef DataType	= Bindable<String>;
 class ListRow extends UIDataContainer <DataType> 
 {
 	private var lblTask:Label;
-	private var btnDelete:Button;
+	private var btnDelete:DataButton<String>;
 
 	public function new(id:String,task:String)
 	{
@@ -27,16 +28,9 @@ class ListRow extends UIDataContainer <DataType>
 		lblTask = new Label("label" + this.id, new Bindable<String>(data.value) );
 		attach(lblTask);
 		
-		btnDelete = new Button("b" + this.id, TodoFacade.langMan.lang.removetask);
+		btnDelete = new DataButton<String>("b" + this.id, TodoFacade.langMan.langBind.removetask.value, null);
+		btnDelete.data = TodoFacade.langMan.langBind.removetask;
 		attach(btnDelete);
-		
-		updateLang.on( TodoFacade.langMan.changed, this);
-		
-	}
-	
-	private function updateLang()
-	{
-		btnDelete.data.value = TodoFacade.langMan.lang.removetask;
 	}
 	
 	

@@ -70,7 +70,7 @@ class LangMacro
 		//add signal
 		fields.push ( { name:"changed", doc:null, meta:[], access:[APublic], kind:FVar( TPath( { pack : ["primevc", "core", "dispatcher"], name : "Signal0", params : [], sub : null } )),  pos:pos } );
 		//add field lang:Ilang
-		fields.push ( { name:"lang", doc:null, meta:[], access:[APublic], kind:FVar( TPath( { pack:[], name:"ILang", params:[ ], sub:null } )),  pos:pos } );
+		fields.push ( { name:"lang", doc:null, meta:[], access:[APrivate], kind:FVar( TPath( { pack:[], name:"ILang", params:[ ], sub:null } )),  pos:pos } );
 		//add field holdings bindables
 		fields.push ( { name:"langBind", doc:null, meta:[], access:[APublic], kind:FVar( TPath( { pack:[], name:"LangManBinds", params:[ ], sub:null } )),  pos:pos } );
 		

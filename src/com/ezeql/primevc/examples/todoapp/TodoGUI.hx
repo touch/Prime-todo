@@ -33,7 +33,7 @@ class TodoGUI extends UIWindow
 	
 	public var input:InputField<String>;
 	
-	public var btnAccept:Button;
+	public var btnAccept:DataButton<String>;
 
 	public var openTasks:Label;
 
@@ -42,25 +42,23 @@ class TodoGUI extends UIWindow
 		
 		
 		super.createChildren();
-		title = new UITextField("title");
+		title = new UITextField("title", true, TodoFacade.langMan.langBind.apptitle);
 		attach(title);
-		title.data.value = "TodoApp";
-
 	
 		input =  new InputField("input");
 		input.updateVO = function() {  if ( input.vo.value != input.data.value) input.vo.value = input.data.value; };
 		attach(input);
 		
-		btnAccept = new Button("btnAccept","Add Task");
+		btnAccept = new DataButton<String>("btnAccept",  TodoFacade.langMan.langBind.addtask.value, null);
+		btnAccept.data = TodoFacade.langMan.langBind.addtask;
+
 		attach(btnAccept);
 
 		listView = new TodoList("listview");
 		attach(listView);
 		
-		openTasks = new Label("opentasks", new Bindable<String>("Open Tasks:" ));
-		openTasks.data.set("Open Tasks:");
+		openTasks = new Label("opentasks"); //TODO: Review this
 		attach(openTasks);
-		
 		
 		english = new Button("english", "english");
 		dutch = new Button("dutch", "dutch");

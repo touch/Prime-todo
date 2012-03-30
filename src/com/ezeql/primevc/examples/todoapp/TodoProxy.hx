@@ -24,13 +24,13 @@ class TodoProxy extends Proxy < ArrayList<String>, TodoEvents >
 		openTasks = new Bindable<String>();
 		updateOpenTaks();
 		updateOpenTaks.on(vo.change, this);
-		updateOpenTaks.on(TodoFacade.langMan.changed, this);
-		
+		updateOpenTaks.on(TodoFacade.langMan.langBind.opentasks.change, this);
 	}
 	
 	private function updateOpenTaks() 
 	{
-		openTasks.value  = TodoFacade.langMan.lang.opentask + ":" + vo.length.string();
+		openTasks.value = TodoFacade.langMan.langBind.opentasks.value + ":" + vo.length.string();
+		
 		
 	}
 	
