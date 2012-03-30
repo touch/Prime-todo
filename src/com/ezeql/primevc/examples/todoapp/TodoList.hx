@@ -13,7 +13,7 @@ class TodoList extends ListView<String>
 	public function new(id) 
 	{
 		super(id);
-		this.createItemRenderer =  function (a, b):IUIDataElement<String> { return cast new ListRow(Std.string(a + b), a); };
+		this.createItemRenderer =  function (a, b):IUIDataElement<String> { return cast new ListRow("listRow" + Std.string(b), a); };
 		
 
 	}

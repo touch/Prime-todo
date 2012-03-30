@@ -27,6 +27,7 @@ class TodoGUIMediator extends primevc.mvc.Mediator<TodoFacade,TodoGUI>
 		if ( gui.input.vo.value != "")
 		{
 			f.model.todoProxy.vo.add( gui.input.vo.value);
+			
 			gui.input.vo.value = "";
 		}
 	}

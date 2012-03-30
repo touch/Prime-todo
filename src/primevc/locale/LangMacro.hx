@@ -53,11 +53,7 @@ class LangMacro
 			
 			
 			var lines:String = "this.lang = new " + StringUtil.capitalizeFirstLetter(node.name) + "();";
-			for (word in words) 
-			{
-				trace(word);
-			}
-			
+
 			
 			
 			

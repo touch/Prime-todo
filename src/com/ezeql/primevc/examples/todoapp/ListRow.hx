@@ -31,6 +31,8 @@ class ListRow extends UIDataContainer <DataType>
 		btnDelete = new DataButton<String>("b" + this.id, TodoFacade.langMan.langBind.removetask.value, null);
 		btnDelete.data = TodoFacade.langMan.langBind.removetask;
 		attach(btnDelete);
+		btnDelete.name = data.value;
+		
 	}
 	
 	
