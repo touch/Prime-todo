@@ -15,6 +15,7 @@ languages:
     ok: ok
     no: no
     morning: GoodMorning
+    test: test
   spanish:
     apptitle: AppTitle Spanish
     opentasks: Tareas Abiertas

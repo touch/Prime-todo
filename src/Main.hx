@@ -14,23 +14,14 @@ import primevc.locale.LangMan;
 
 class Main 
 {
-	
-	
 	static function main() 
 	{
-		
 		new Todo();
-		
-
 	}
-
-	
 }
 
 class Todo
 {
-
-	
 	public function new ()
 	{
 		var stage = Lib.current.stage;
