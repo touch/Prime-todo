@@ -84,22 +84,25 @@ class LangMacro
 		var tintBindable = TPath( { pack : ["primevc", "core"], name : "Bindable", params : [ TPType( TPath( { pack : [], name : "String", params : [], sub : null } )) ], sub :null } );
 		var yaml = YamlHX.read(neko.io.File.getContent('test.yaml'));
 
-		var refLang = yaml.node.languages.node.dutch; //Interface vars are created based in this language ( Dutch)
+		var langs = yaml.node.languages.elements;
 		
-		var t = {
-			pack: [],  pos:pos, 	meta:[], params:[],	 isExtern:false, kind:TDClass(null, [ ], false),	 name: "LangManBinds",
-			fields:[ /*{meta:[], name:"new", doc:null, access:[APublic], kind:FFun( { args:[], ret:null, expr:Context.parse("{}", pos), params:[] } ), pos:pos } */],
-		};
-
-			
-	
+		var t = { pack: [],  pos:pos, 	meta:[], params:[],	 isExtern:false, kind:TDClass(null, [ ], false),	 name: "LangManBinds", fields:[]	};
+		
+		var hash = new Hash<Bool>();
 		var constructorWords = "";
-		for (word in refLang.elements) 
+		for (lang in langs)
 		{
-			fields.push( { pos:pos, meta:[], name:word.name, doc:null, access:[APublic], kind:FVar(tint) } );
-			t.fields.push( { pos:pos, meta:[], name:word.name, doc:null, access:[APublic], kind:FVar(tintBindable) } );
-			constructorWords +=  word.name + " = new primevc.core.Bindable<String>('"+ word.innerData + "');";
-			// + "= new primevc.core.bindable.Bindable<String>("");"
+			var words = lang.elements;
+			for (word in words) 
+			{
+				if (!hash.exists(word.name))
+				{
+					fields.push( { pos:pos, meta:[], name:word.name, doc:null, access:[APublic], kind:FVar(tint) } );
+					t.fields.push( { pos:pos, meta:[], name:word.name, doc:null, access:[APublic], kind:FVar(tintBindable) } );
+					constructorWords +=  word.name + " = new primevc.core.Bindable<String>('" + word.innerData + "');";
+					hash.set(word.name, true);
+				}
+			}
 		}
 	
 		t.fields.push( { meta:[], name:"new", doc:null, access:[APublic], kind:FFun( { args:[], ret:null, expr:Context.parse("{" + constructorWords + "}", pos), params:[] } ), pos:pos } );
@@ -107,7 +110,6 @@ class LangMacro
 		Context.defineType(t);
 		
 		return fields;
-		
 	}
 	
 	#if macro
