@@ -1,15 +1,12 @@
 spanish:
  apptitle: AppTitle spanish
- opentasks: Open Tasks
- removetask: Remove Task
- addtask: Add Task
+ opentasks: Tareas Abiertas
+ removetask: Remover Tarea
+ addtask: Agregar Tarea
  ok: ok
  no: no
- morning: GoodMorning
+ morning: Buen dia
  comments: !!func
-  0: no Comments
-  1: one Comment
-  n: %1 Comments
-
-
- 
+  0: No hay comentarios
+  1: Un Comentario
+  n:WoW!!!! %1 Comentarios

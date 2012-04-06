@@ -111,34 +111,7 @@ class LangMacro
 		return fields;
     }
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	@:macro static public function buildInterface()  :Array<Field> 
 	{
 		var pos = haxe.macro.Context.currentPos();
