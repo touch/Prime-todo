@@ -130,8 +130,12 @@ class YamlHX extends Fast
 						  anchors.set(value.substr(value.indexOf("&")+1), new_element);
 						}else if(StringTools.startsWith(StringTools.ltrim(value),"*")){ // yaml alias
               new_element.set("yaml-alias", value.substr(value.indexOf("*")+1)); // should be yaml:alias
-						}else{
-						  new_element.addChild(Xml.createPCData(value));
+						} else if (StringTools.trim(value) == "!!func") // !!type func hack
+						{
+							new_element.set("func", "type");
+						}else 
+						{			
+							new_element.addChild(Xml.createPCData(value));
 						}
 					}
 					

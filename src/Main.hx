@@ -5,6 +5,7 @@ import flash.display.StageAlign;
 import flash.display.StageScaleMode;
 import flash.Lib;
 import primevc.core.dispatcher.Signal0;
+import primevc.locale.ILang;
 import primevc.locale.LangMan;
 
 /**
@@ -30,6 +31,8 @@ class Todo
 
 		var f = new TodoFacade();
 		f.start();
+	
+		
 	}
 
 }

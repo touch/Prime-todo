@@ -28,12 +28,6 @@ class TodoListMediator extends primevc.mvc.Mediator<TodoFacade,TodoList>
 	private function handler(e:MouseState) 
 	{
 		f.model.todoProxy.vo.remove( e.target.name);
-		//trace(e.target.name == "delbtn");
-		
-		//trace(e.target.parent);
-		
-		//if ( e.target.name.indexOf(") trace("yes");
-		
 	}
 	
 	
