@@ -17,7 +17,10 @@ class TodoFacade extends Facade < TodoEvents, TodoModel, IDisposable, TodoContro
 	public function new() 
 	{
 		TodoFacade.langMan = new LangMan();
-		trace( TodoFacade.langMan.langBind.comments(0) );
+		TodoFacade.langMan.dutch();
+		trace( TodoFacade.langMan.current.comments( 0) );
+		
+		
 		super();
 	}
 	

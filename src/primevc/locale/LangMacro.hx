@@ -34,7 +34,7 @@ class LangMacro
 			}
 		}
 		
-		var previousWordName:String = "";
+		
 		
 		for (yaml in langsRaw) // for yamls in yamls array
 		{
@@ -47,7 +47,7 @@ class LangMacro
 				
 				var constructorWords = "";
 				var exprUpdateValues:String = "";
-				
+				var previousWordName:String = "";
 
 				for (word in node.elements) 
 				{
@@ -58,16 +58,38 @@ class LangMacro
 						
 							previousWordName = word.name;
 
-							var expr = Context.parse("{return Std.string(val);}", pos);
-							var farg1:FunctionArg =  { name:"val", opt:false, type:TPath( { pack : [], name : "Int", params : [], sub : null } ) };
-							t.fields.push( { pos:pos, meta:[], name:word.name, doc:null, access:[APublic], kind:FFun(  { args:[farg1 ], ret:tint, expr:expr, params:[] } ) } );
+							var farg1:FunctionArg =  { name:"param1", opt:false, type:TPath( { pack : [], name : "Int", params : [], sub : null } ) };
+							
+							var funcData = "{var result = switch(param1){";
+							
+							for (val in word.elements) 
+							{
+								if (val.name != "n")
+								{
+									funcData += "case " + val.name +":" + addSlashes(val.innerData) + ";";
+								}
+								else
+								{
+									funcData +="default:" + addSlashes(val.innerData) + ";";
+								}
+							}
+							funcData += "}";
+							
+							funcData += "return StringTools.replace(result, '%1', Std.string(param1));}";
+							
+							t.fields.push( { pos:pos, meta:[], name:word.name, doc:null, access:[APublic], kind:FFun(  { args:[farg1 ], ret:tint, expr:Context.parse(funcData, pos), params:[] } ) } );
+							
 						}
 					}
 					else
 					{
 						t.fields.push( { name : word.name, doc : null, meta : [], access : [APublic], kind : FVar(tint), pos : pos } );
+						
+						//the data for all strings
 						constructorWords +=  word.name + "=" + addSlashes( word.innerData) + ";";
-						exprUpdateValues += "langBind." + word.name + ".value = this.lang." + word.name + ";";
+						
+						//how the data for all strings will be pushed into bindables
+						exprUpdateValues += "langBind." + word.name + ".value = this.current." + word.name + ";";
 					}
 				}
 				
@@ -75,29 +97,48 @@ class LangMacro
 				t.fields.push( { meta:[], name:"new", doc:null, access:[APublic], kind:FFun( { args:[], ret:null, expr:Context.parse("{"+ constructorWords + "}", pos), params:[] } ), pos:pos } );
 				
 				//create class named Language implementing ILang
+				
 				Context.defineType(t);
 
 				//add methods for changing langman language
 				//TODO: Make languages instance singletons
-				var expr = Context.parse("{this.lang = new " + StringUtil.capitalizeFirstLetter(node.name)  +"(); this.changed.send(); " + exprUpdateValues+"}", pos);
+				var expr = Context.parse("{this.current = new " + StringUtil.capitalizeFirstLetter(node.name)  +"(); this.changed.send(); " + exprUpdateValues+"}", pos);
 				
 				fields.push( { name:node.name, doc:null, meta:[], access:[APublic], kind:FFun(  { args:[], ret:null, expr:expr, params:[] } ), pos:pos } );
 			}
 		}
 
-		//add signal
-		fields.push ( { name:"changed", doc:null, meta:[], access:[APublic], kind:FVar( TPath( { pack : ["primevc", "core", "dispatcher"], name : "Signal0", params : [], sub : null } )),  pos:pos } );
-		//add field lang:Ilang
-		fields.push ( { name:"lang", doc:null, meta:[], access:[APrivate], kind:FVar( TPath( { pack:[], name:"ILang", params:[ ], sub:null } )),  pos:pos } );
-		//add field holdings bindables
-		fields.push ( { name:"langBind", doc:null, meta:[], access:[APublic], kind:FVar( TPath( { pack:[], name:"LangManBinds", params:[ ], sub:null } )),  pos:pos } );
-		
-		fields.push ( { meta:[], name:"new", doc:null, access:[APublic], kind:FFun( { args:[], ret:null, expr:Context.parse("{ this.changed = new primevc.core.dispatcher.Signal0(); this.langBind = new LangManBinds();}", pos), params:[] } ), pos:pos } );
-		
 		return fields;
     }
 	
-
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	@:macro static public function buildInterface()  :Array<Field> 
 	{
 		var pos = haxe.macro.Context.currentPos();
@@ -124,7 +165,7 @@ class LangMacro
 		}
 		
 		
-		//LangManBinds  is the class intance which acts as client, it have binables and a private field called lang which is the actual language being used
+
 		var t = { pack:[], pos:pos, meta:[], params:[], isExtern:false, kind:TDClass(), name:"LangManBinds", fields:[] };
 		var hash = new Hash<Bool>();
 		var constructorWords = "";
@@ -140,30 +181,24 @@ class LangMacro
 					{
 						if ( word.has.func) // if current word is a function. Ex Comments
 						{
-							//var expr = Context.parse("{}", pos);
-				
-							//fields.push( { name:node.name, doc:null, meta:[], access:[APublic], kind:FFun(  { args:[], ret:null, expr:expr, params:[] } ), pos:pos } );
-				
-							//fields.push( { pos:pos, meta:[], name:word.name, doc:null, access:[APublic], kind:FFun(tint) } );
-							//type function
+
 							var farg1:FunctionArg =  { name:"val", opt:false, type:TPath( { pack : [], name : "Int", params : [], sub : null } ) };
 							fields.push( { pos:pos, meta:[], name:word.name, doc:null, access:[APublic], kind:FFun(  { args:[farg1 ], ret:tint, expr:null, params:[] } ) } );
-							
-							//var expr = Context.parse("{ return this.lang." + word.name  +"(val);}" , pos);
-							var expr = Context.parse("{ return 'sting';}" , pos);
-							
-							t.fields.push( { pos:pos, meta:[], name:word.name, doc:null, access:[APublic], kind:FFun(  { args:[farg1 ], ret:tint, expr:expr, params:[] } ) } );
 						}
 						else
 						{
 							//add string fields to ILang Intarface
 							fields.push( { pos:pos, meta:[], name:word.name, doc:null, access:[APublic], kind:FVar(tint) } );
+							
 							//add Bindables to LagManBinds wrapper
 							t.fields.push( { pos:pos, meta:[], name:word.name, doc:null, access:[APublic], kind:FVar(tintBindable) } );
+							
 							//constructor data for LagManBinds
-							constructorWords +=  word.name + " = new primevc.core.Bindable<String>('" + word.innerData + "');";
+							//constructorWords +=  word.name + " = new primevc.core.Bindable<String>('" + word.innerData + "');";
+							constructorWords +=  word.name + " = new primevc.core.Bindable<String>('undefinedstring');";
+							
 						}
-						hash.set(word.name, true);
+						hash.set(word.name, true);	
 					}
 				}
 			}
