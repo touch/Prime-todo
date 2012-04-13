@@ -7,6 +7,7 @@ ruRU:
  no: no
  morning: GoodMorning
  comments: !!pl
+  zero: {0:I} no comments
   0: {0:I} sig_russian
   1: {0:I} plural1_russian 
   2: {0:I} plural2_russian 

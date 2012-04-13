@@ -7,5 +7,7 @@ nlNL:
  no: no
  morning: GoodMorning
  comments: !!pl
-  1: one Comment ({0:I})
-  2: {0:I} Comments
+  zero: {0:I} no comments
+  0: {0:I} one Comment
+  1: {0:I} Comments
+  

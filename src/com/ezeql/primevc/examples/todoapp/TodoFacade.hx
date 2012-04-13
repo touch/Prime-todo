@@ -30,8 +30,10 @@ class TodoFacade extends Facade < TodoEvents, TodoModel, IDisposable, TodoContro
 	private function test() 
 	{
 		trace( TodoFacade.langMan.current.comments(0) );
-		trace( TodoFacade.langMan.current.comments(2) );
 		trace( TodoFacade.langMan.current.comments(1) );
+		trace( TodoFacade.langMan.current.comments(2) );
+		trace( TodoFacade.langMan.current.comments(6) );
+		trace( TodoFacade.langMan.current.comments(10) );
 	}
 	
 	override private function setupModel ()			{ model			= new TodoModel(); } 

@@ -7,5 +7,6 @@ esAR:
  no: no
  morning: Buen dia
  comments: !!pl
+  zero: {0:I} no comments
   0: {0:I} Comentario en Singular
   1: {0:I} Comentario Plural
