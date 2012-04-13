@@ -1,0 +1,12 @@
+enUS:
+ apptitle: AppTitle English
+ opentasks: Open Tasks
+ removetask: Remove Task
+ addtask: Add Task
+ ok: ok
+ no: no
+ morning: GoodMorning
+ comments: !!pl
+  0: no Comments
+  1: one Comment
+  2: {0:I} Comments

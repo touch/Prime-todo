@@ -6,7 +6,6 @@ import primevc.utils.FastArray;
 import primevc.utils.StringUtil;
 
 
-
 class LangMacro 
 {
     @:macro public static function build() : Array<Field> 
@@ -60,22 +59,18 @@ class LangMacro
 
 							var farg1:FunctionArg =  { name:"param1", opt:false, type:TPath( { pack : [], name : "Int", params : [], sub : null } ) };
 							
-							var funcData = "{var result = switch(param1){";
-							
+							var funcData:String = " { var hash = new Hash<String>();";
+
 							for (val in word.elements) 
-							{
-								if (val.name != "n")
-								{
-									funcData += "case " + val.name +":" + addSlashes(val.innerData) + ";";
-								}
-								else
-								{
-									funcData +="default:" + addSlashes(val.innerData) + ";";
-								}
-							}
-							funcData += "}";
+								funcData +=  "hash.set(" + addSlashes(val.name) + "," + addSlashes(val.innerData) + ");";
 							
-							funcData += "return StringTools.replace(result, '%1', Std.string(param1));}";
+							funcData += " var pluralType = thx.translation.PluralForms.pluralRules[ thx.culture.Culture.defaultCulture.pluralRule]( param1 ); ";
+							funcData += " var result = hash.get( Std.string(pluralType) );  ";
+							funcData += " return Strings.format( result, [ param1 ] ); ";
+							funcData += " } ";
+							
+						
+							
 							
 							t.fields.push( { pos:pos, meta:[], name:word.name, doc:null, access:[APublic], kind:FFun(  { args:[farg1 ], ret:tint, expr:Context.parse(funcData, pos), params:[] } ) } );
 							
@@ -94,6 +89,7 @@ class LangMacro
 				}
 				
 				//add consturctor to Languages classses
+				
 				t.fields.push( { meta:[], name:"new", doc:null, access:[APublic], kind:FFun( { args:[], ret:null, expr:Context.parse("{"+ constructorWords + "}", pos), params:[] } ), pos:pos } );
 				
 				//create class named Language implementing ILang
@@ -101,8 +97,9 @@ class LangMacro
 				Context.defineType(t);
 
 				//add methods for changing langman language
-				//TODO: Make languages instance singletons
-				var expr = Context.parse("{this.current = new " + StringUtil.capitalizeFirstLetter(node.name)  +"(); this.changed.send(); " + exprUpdateValues+"}", pos);
+				//TODO: Make languages instance singletons}
+				var currentLang = "thx.cultures." + StringUtil.capitalizeFirstLetter(node.name) + ".culture";
+				var expr = Context.parse("{this.current = new " + StringUtil.capitalizeFirstLetter(node.name)  +"();" + exprUpdateValues +" thx.culture.Culture.defaultCulture = "+currentLang +"; this.changed.send(); }", pos);
 				
 				fields.push( { name:node.name, doc:null, meta:[], access:[APublic], kind:FFun(  { args:[], ret:null, expr:expr, params:[] } ), pos:pos } );
 			}

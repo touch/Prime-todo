@@ -19,5 +19,6 @@ import primevc.locale.LangMacro;
 	{
 		changed = new Signal0();
 		langBind = new LangManBinds();
+	
 	}
 }

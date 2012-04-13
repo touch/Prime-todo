@@ -1,0 +1,11 @@
+esAR:
+ apptitle: AppTitle spanish
+ opentasks: Tareas Abiertas
+ removetask: Remover Tarea
+ addtask: Agregar Tarea
+ ok: ok
+ no: no
+ morning: Buen dia
+ comments: !!pl
+  0: {0:I} Comentario en Singular
+  1: {0:I} Comentario Plural

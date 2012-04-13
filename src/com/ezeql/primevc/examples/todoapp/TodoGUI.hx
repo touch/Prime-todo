@@ -27,6 +27,8 @@ class TodoGUI extends UIWindow
 	private var english:Button;
 	private var spanish:Button;
 	private var dutch:Button;
+	private var russian:Button;
+	
 	public var title:UITextField;
 	
 	public var listView:TodoList;
@@ -63,12 +65,14 @@ class TodoGUI extends UIWindow
 		english = new Button("english", "english");
 		dutch = new Button("dutch", "dutch");
 		spanish = new Button("spanish", "spanish");
+		russian = new Button("russian", "russian");
 		
-		attach(english); attach(dutch); attach(spanish);
+		attach(english); attach(dutch); attach(spanish);  attach(russian);
 		
-		english.userEvents.mouse.click.observe( this, function () { TodoFacade.langMan.english(); } );
-		//dutch.userEvents.mouse.click.observe( this, function () { TodoFacade.langMan.dutch(); } );
-		//spanish.userEvents.mouse.click.observe( this, function () { TodoFacade.langMan.spanish(); } );
+		english.userEvents.mouse.click.observe( this, function () { TodoFacade.langMan.enUS(); } );
+		dutch.userEvents.mouse.click.observe( this, function () { TodoFacade.langMan.nlNL(); } );
+		spanish.userEvents.mouse.click.observe( this, function () { TodoFacade.langMan.esAR(); } );
+		russian.userEvents.mouse.click.observe( this, function () { TodoFacade.langMan.ruRU(); } );
 	}
 
 	

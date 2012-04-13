@@ -17,11 +17,21 @@ class TodoFacade extends Facade < TodoEvents, TodoModel, IDisposable, TodoContro
 	public function new() 
 	{
 		TodoFacade.langMan = new LangMan();
-		TodoFacade.langMan.spanish();
-		trace( TodoFacade.langMan.current.comments( 1000000000) );
+		TodoFacade.langMan.ruRU();
+		
+		TodoFacade.langMan.changed.observe( this, test) ;
+
+		
 		
 		
 		super();
+	}
+	
+	private function test() 
+	{
+		trace( TodoFacade.langMan.current.comments(0) );
+		trace( TodoFacade.langMan.current.comments(2) );
+		trace( TodoFacade.langMan.current.comments(1) );
 	}
 	
 	override private function setupModel ()			{ model			= new TodoModel(); } 

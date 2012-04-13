@@ -1,0 +1,12 @@
+ruRU:
+ apptitle: AppTitle Russian
+ opentasks: Открытые задания
+ removetask: Remove Task
+ addtask: Add Task
+ ok: ok
+ no: no
+ morning: GoodMorning
+ comments: !!pl
+  0: {0:I} sig_russian
+  1: {0:I} plural1_russian 
+  2: {0:I} plural2_russian 
