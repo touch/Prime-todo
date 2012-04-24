@@ -4,8 +4,12 @@ esAR:
  removetask: Remover Tarea
  addtask: Agregar Tarea
  ok: ok
- no: no
- morning: Buen dia
+ g1:
+  ga: test
+  g2:
+   g3:
+    test1: test1AAA
+    test2: test2BBB
  comments: !!pl
   zero: {0:I} no comments
   0: {0:I} Comentario en Singular

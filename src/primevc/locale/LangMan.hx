@@ -12,13 +12,17 @@ import primevc.locale.LangMacro;
 @:build(primevc.locale.LangMacro.build())class LangMan
 {
 	public var current(default, null):ILang;
-	public var changed(default, null):Signal0;
-	public var langBind(default, null):LangManBinds;
-	
+	public var change(default, null):Signal0;
+	public var bindables(default, null):LangManBindables;
+
 	public function new()
 	{
-		changed = new Signal0();
-		langBind = new LangManBinds();
+		change = new Signal0();
+		bindables = new LangManBindables();
+
+
+		
+		
 	
 	}
 }

@@ -1,0 +1,11 @@
+-lib feffects
+-cp src
+-cp ../primevc/PrimeVC/src
+-cp ../primevc/PrimeVC/libs/apparat
+-cp ../primevc/PrimeVC/libs/haxe
+-cp styles
+-D dragEnabled
+-swf "c:/Users/ezeql/work/onlinetouch/primetodo/bin/todoapp.swf"
+-swf-header 800:600:30:FFFFFF
+-swf-version 10.3
+-main Main

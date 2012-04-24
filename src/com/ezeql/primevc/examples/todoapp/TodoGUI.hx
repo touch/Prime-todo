@@ -12,7 +12,6 @@ import primevc.gui.components.InputField;
 
 import primevc.gui.components.ListView;
 import primevc.core.collections.ArrayList;
-import primevc.gui.components.ListPanel;
 import primevc.gui.components.ListHolder;
 import primevc.gui.components.DataButton;
 import primevc.core.collections.ArrayList;
@@ -41,18 +40,16 @@ class TodoGUI extends UIWindow
 
 	override private function createChildren():Void 
 	{
-		
-		
 		super.createChildren();
-		title = new UITextField("title", true, TodoFacade.langMan.langBind.apptitle);
+		title = new UITextField("title", true, TodoFacade.langMan.bindables.apptitle);
 		attach(title);
 	
 		input =  new InputField("input");
 		input.updateVO = function() {  if ( input.vo.value != input.data.value) input.vo.value = input.data.value; };
 		attach(input);
 		
-		btnAccept = new DataButton<String>("btnAccept",  TodoFacade.langMan.langBind.addtask.value, null);
-		btnAccept.data = TodoFacade.langMan.langBind.addtask;
+		btnAccept = new DataButton<String>("btnAccept",  TodoFacade.langMan.bindables.addtask.value, null);
+		btnAccept.data = TodoFacade.langMan.bindables.addtask;
 
 		attach(btnAccept);
 
@@ -70,9 +67,9 @@ class TodoGUI extends UIWindow
 		attach(english); attach(dutch); attach(spanish);  attach(russian);
 		
 		english.userEvents.mouse.click.observe( this, function () { TodoFacade.langMan.enUS(); } );
-		dutch.userEvents.mouse.click.observe  ( this, function () { TodoFacade.langMan.nlNL(); } );
-		spanish.userEvents.mouse.click.observe( this, function () { TodoFacade.langMan.esAR(); } );
-		russian.userEvents.mouse.click.observe( this, function () { TodoFacade.langMan.ruRU(); } );
+		//dutch.userEvents.mouse.click.observe  ( this, function () { TodoFacade.langMan.nlNL(); } );
+		//spanish.userEvents.mouse.click.observe( this, function () { TodoFacade.langMan.esAR(); } );
+		//russian.userEvents.mouse.click.observe( this, function () { TodoFacade.langMan.ruRU(); } );
 	}
 
 	

@@ -28,8 +28,8 @@ class ListRow extends UIDataContainer <DataType>
 		lblTask = new Label("label" + this.id, new Bindable<String>(data.value) );
 		attach(lblTask);
 		
-		btnDelete = new DataButton<String>("b" + this.id, TodoFacade.langMan.langBind.removetask.value, null);
-		btnDelete.data = TodoFacade.langMan.langBind.removetask;
+		btnDelete = new DataButton<String>("b" + this.id, TodoFacade.langMan.bindables.removetask.value, null);
+		btnDelete.data = TodoFacade.langMan.bindables.removetask;
 		attach(btnDelete);
 		btnDelete.name = data.value;
 		

@@ -1,6 +1,7 @@
 package com.ezeql.primevc.examples.todoapp;
 
 
+import flash.system.Capabilities;
 import primevc.core.traits.IDisposable;
 import primevc.locale.LangMan;
 import primevc.mvc.Facade;
@@ -16,24 +17,25 @@ class TodoFacade extends Facade < TodoEvents, TodoModel, IDisposable, TodoContro
 
 	public function new() 
 	{
+	
 		TodoFacade.langMan = new LangMan();
-		TodoFacade.langMan.ruRU();
 		
-		TodoFacade.langMan.changed.observe( this, test) ;
-
+		TodoFacade.langMan.enUS();
 		
+		TodoFacade.langMan.change.observe(this, test);
 		
 		
 		super();
+		
 	}
 	
 	private function test() 
 	{
-		trace( TodoFacade.langMan.current.comments(0) );
-		trace( TodoFacade.langMan.current.comments(1) );
-		trace( TodoFacade.langMan.current.comments(2) );
-		trace( TodoFacade.langMan.current.comments(6) );
-		trace( TodoFacade.langMan.current.comments(10) );
+		//trace( TodoFacade.langMan.current.comments(0) );
+		//trace( TodoFacade.langMan.current.comments(1) );
+		//trace( TodoFacade.langMan.current.comments(2) );
+		//trace( TodoFacade.langMan.current.comments(6) );
+		//trace( TodoFacade.langMan.current.comments(10) );
 	}
 	
 	override private function setupModel ()			{ model			= new TodoModel(); } 
