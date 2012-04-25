@@ -1,4 +1,4 @@
-ruRU:
+RuRU:
  apptitle: AppTitle Russian
  opentasks: Открытые задания
  removetask: Remove Task
@@ -6,12 +6,12 @@ ruRU:
  ok: ok
  g1:
   ga: test
+  comments: !!pl
+   zero: {0:I} no comments
+   0: {0:I} one Comment
+   1: {0:I} Comments
+   2: {0:I} Comments russian
   g2:
    g3:
     test1: test 1 ruRU
     test2: test2BBB
- comments: !!pl
-  zero: {0:I} no comments
-  0: {0:I} sig_russian
-  1: {0:I} plural1_russian 
-  2: {0:I} plural2_russian 

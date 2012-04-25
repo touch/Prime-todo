@@ -1,4 +1,4 @@
-nlNL:
+NlNL:
  apptitle: AppTitle dutch
  opentasks: Open Tasks
  removetask: Remove Task
@@ -6,12 +6,11 @@ nlNL:
  ok: ok
  g1:
   ga: test
+  comments: !!pl
+   zero: {0:I} no comments
+   0: {0:I} one Comment
+   1: {0:I} Comments
   g2:
    g3:
     test1: test 1 NlNL
     test2: test2BBB
- comments: !!pl
-  zero: {0:I} no comments
-  0: {0:I} one Comment
-  1: {0:I} Comments
-  

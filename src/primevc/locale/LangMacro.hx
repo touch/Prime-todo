@@ -225,7 +225,9 @@ class LangMacro
 
 				typeDefinition.fields.push( { pos:Context.currentPos(), meta:[], name:el.name, doc:null, access:[APublic], kind:FVar(tintStruct) } );
 
-				consLines += el.name +" = {" + followAndFill(el) + "}";
+				consLines += el.name +" = {" + followAndFill(el,typeDefinition) + "}";
+				
+				
 			}
 		}
 		
@@ -234,7 +236,7 @@ class LangMacro
 	}
 
 	
-	static private function  followAndFill(xml:Fast, ?consLines:String = "" )
+	static private function  followAndFill(xml:Fast, typeDefinition:TypeDefinition, ?consLines:String = "")
 	{
 		for (el in xml.elements) 
 		{
@@ -244,13 +246,33 @@ class LangMacro
 			}
 			else if ( el.has.func)
 			{
+				var tint = TPath( { pack : [], name : "String", params : [], sub : null } );
 				//TODO: this should point to 
+				var farg1:FunctionArg =  { name:"param1", opt:false, type:TPath( { pack : [], name : "Int", params : [], sub : null } ) };
 				
+				var funcData:String = " { var hash = new Hash<String>();";
+				
+				for (val in el.elements) 
+					funcData +=  "hash.set(" + addSlashes(val.name) + "," + addSlashes(val.innerData) + ");";
+				
+				funcData += " var result = '';";
+				funcData += " if( (hash.exists('zero')) && (param1 == 0) ) { result =  hash.get('zero'); }";
+				funcData += "else";
+				funcData += "{";
+				funcData += " var pluralType = thx.translation.PluralForms.pluralRules[ thx.culture.Culture.defaultCulture.pluralRule]( param1 ); ";
+				funcData += " result = hash.get( Std.string(pluralType) );  ";
+				funcData += "}";//if
+				funcData += " return Strings.format( result, [ param1 ] ); ";
+				funcData += "}";
+				
+				typeDefinition.fields.push( { pos: Context.currentPos(), meta:[], name:el.name, doc:null, access:[APublic], kind:FFun(  { args:[farg1 ], ret:tint, expr:Context.parse(funcData,  Context.currentPos()), params:[] } ) } );
+				
+				consLines += el.name + ":this." + el.name  + ",";
 			}
 			else
 			{
 				consLines += el.name  + ":{";
-				consLines += followAndFill(el);
+				consLines += followAndFill(el,typeDefinition);
 				consLines += "}";
 			}
 		}
