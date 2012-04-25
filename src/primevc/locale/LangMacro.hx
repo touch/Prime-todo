@@ -8,6 +8,7 @@ import primevc.utils.MacroUtils;
 
 
 using primevc.utils.StringUtil;
+using StringTools;
 
 class LangMacro 
 {
@@ -17,9 +18,6 @@ class LangMacro
 	{
 		var pos = haxe.macro.Context.currentPos();
 		var fields = haxe.macro.Context.getBuildFields();
-		
-		var tint = TPath( { pack : [], name : "String", params : [], sub : null } );
-		var tintBindable = TPath( { pack : ["primevc", "core"], name : "Bindable", params : [ TPType( TPath( { pack : [], name : "String", params : [], sub : null } )) ], sub :null } );
 		
 		var langsRaw = new Hash<YamlHX>();
 		
@@ -32,7 +30,8 @@ class LangMacro
 				{
 					if ( file.indexOf(".yaml") > -1 )
 					{
-						langsRaw.set(file , YamlHX.read( neko.io.File.getContent( currentDir + "/" + file) ));
+						var key = file.replace(".yaml", "");
+						langsRaw.set(key , YamlHX.read( neko.io.File.getContent( currentDir + "/" + file) ));
 					}
 				}
 			}
@@ -40,19 +39,22 @@ class LangMacro
 
 		var t = { pack:[], pos:pos, meta:[], params:[], isExtern:false, kind:TDClass(), name:"LangManBindables", fields:[] };
 		
-		var hash = new Hash<Bool>();
 		var constructorWords = "";
 	
+
 		for (yaml in langsRaw) 
 		{
 			for (lang in yaml.elements)
 			{
 				// ILang interface generation. Also creates Typedefs.
 				traverseXMLInterface(lang, fields);
-				//Bindables creation
-				constructorWords = traverseXMLLangManBind(lang, t);
 			}
 		}
+		
+		var defaultLang = langsRaw.get("EnNZ");
+		
+		constructorWords = traverseXMLLangManBind(defaultLang, t);
+		
 		t.fields.push( { meta:[], name:"new", doc:null, access:[APublic], kind:FFun( { args:[], ret:null, expr:Context.parse("{" + constructorWords + "}", pos), params:[] } ), pos:pos } );
 		
 		Context.defineType(t);
@@ -105,10 +107,10 @@ class LangMacro
 				//ATM only top level strings and functions are working. Remains to get  all values enclosed in a sublevel  working. Ex. level1.level2. wont work.
 				constructorWords = traverseXMLGenerateTypes(node, t, "");
 				
-				trace(constructorWords);
-				
+
 				//TODO: this method write the strings for pusshing the values of any language into langman.bindables
-				//exprUpdateValues = traverseXMLGenerateExpValues(node, t, "");
+				exprUpdateValues = traverseXMLGenerateExpValues(node);
+				
 
 				//add consturctor to Languages classses
 				t.fields.push( { meta:[], name:"new", doc:null, access:[APublic], kind:FFun( { args:[], ret:null, expr:Context.parse("{"+ constructorWords + "}", pos), params:[] } ), pos:pos } );
@@ -165,7 +167,7 @@ class LangMacro
 				consLines +=  el.name + "=" + addSlashes( el.innerData) + "; ";
 				//
 				///*how the data for all strings will be pushed into bindables*/
-				//exprUpdateValues += "bindables." + word.name + ".value = this.current." + word.name + ";";
+				
 			}
 			else if( el.has.func )
 			{
@@ -192,25 +194,12 @@ class LangMacro
 			}
 			else
 			{ 
-				//trace("3: " + el.name );
 				//type generated in BuildInterface Method
 				var tintStruct = TPath( { pack : [], name :el.name.capitalizeFirstLetter() + "struct" , params : [], sub : null } );
 
 				typeDefinition.fields.push( { pos:Context.currentPos(), meta:[], name:el.name, doc:null, access:[APublic], kind:FVar(tintStruct) } );
 
-				//consLines += el.name + "= cast { };";
-				
 				consLines += el.name +" = {" + followAndFill(el) + "}";
-			
-				
-				//TODO: FILL LANGUAGES!
-				/* Something like ...
-				 = { comment: { subcomment:"test" }, test:"test" };
-				 
-				 */
-				
-				
-				
 			}
 		}
 		
@@ -229,7 +218,7 @@ class LangMacro
 			}
 			else if ( el.has.func)
 			{
-				//ignore by now
+				consLines += el.name + ":'" + el.innerData  + "',";
 			}
 			else
 			{
@@ -243,15 +232,16 @@ class LangMacro
 	
 	
 	
-	static private function traverseXMLGenerateExpValues(xml:Fast, typeDefinition:TypeDefinition, ?consLines:String = "" )
+	static private function traverseXMLGenerateExpValues(xml:Fast )
 	{
+		var result = "";
 		//TODO: this method write the strings for pusshing the values of any language into langman.bindables
 		//exprUpdateValues += "bindables." + word.name + ".value = this.current." + word.name + ";";
 		for (el in xml.elements) 
 		{
 			if ( isLeaf( el) )
 			{
-			
+				result +=  "this.bindables." + el.name + ".value = this.current." +el.name +";";
 			}
 			else if ( el.has.func)
 			{
@@ -259,10 +249,10 @@ class LangMacro
 			}
 			else
 			{
-				
+				//result += traverseXMLGenerateExpValues(el);
 			}
 		}
-		return consLines;
+		return result;
 	}
 	
 
@@ -323,7 +313,7 @@ class LangMacro
 					type.fields.push( { name :el.name, doc : null, meta : [], access : [APublic], kind :FieldType.FVar(TPath( { pack : ["primevc", "core"], name : "Bindable", params : [ TPType( TPath( { pack : [], name : "String", params : [], sub : null } )) ], sub :null } )), pos : Context.currentPos() }   );
 				
 				//constructor data for LagManBinds
-				constructorLines +=  el.name + " = new primevc.core.Bindable<String>('no language defined');";
+				constructorLines +=  el.name + " = new primevc.core.Bindable<String>('" +  el.innerData + "');";
 			}
 			else if( el.has.func )
 			{
