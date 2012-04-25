@@ -9,6 +9,7 @@ import primevc.utils.MacroUtils;
 
 using primevc.utils.StringUtil;
 using StringTools;
+using Lambda;
 
 class LangMacro 
 {
@@ -37,10 +38,12 @@ class LangMacro
 			}
 		}
 
+	
 		var t = { pack:[], pos:pos, meta:[], params:[], isExtern:false, kind:TDClass(), name:"LangManBindables", fields:[] };
 		
 		var constructorWords = "";
 	
+
 
 		for (yaml in langsRaw) 
 		{
@@ -53,8 +56,9 @@ class LangMacro
 		
 		var defaultLang = langsRaw.get("EnNZ");
 		
-		constructorWords = traverseXMLLangManBind(defaultLang, t);
+		constructorWords = traverseXMLLangManBind( new Fast(defaultLang.x.firstElement()), t);
 		
+		//trace(constructorWords);
 		t.fields.push( { meta:[], name:"new", doc:null, access:[APublic], kind:FFun( { args:[], ret:null, expr:Context.parse("{" + constructorWords + "}", pos), params:[] } ), pos:pos } );
 		
 		Context.defineType(t);
@@ -109,7 +113,9 @@ class LangMacro
 				
 
 				//TODO: this method write the strings for pusshing the values of any language into langman.bindables
-				exprUpdateValues = traverseXMLGenerateExpValues(node);
+				exprUpdateValues = traverseXMLGenerateExpValues(node, "");
+				
+			
 				
 
 				//add consturctor to Languages classses
@@ -136,7 +142,8 @@ class LangMacro
 				
 				var currentLang = cultureClassName + ".culture";
 				
-				var expr = Context.parse("{this.current = new " + node.name.capitalizeFirstLetter()  +"();" + exprUpdateValues +" thx.culture.Culture.defaultCulture = "+currentLang +"; this.change.send(); }", pos);
+				
+				var expr = Context.parse("{this.current = new " + node.name.capitalizeFirstLetter()  +"();" + exprUpdateValues + " thx.culture.Culture.defaultCulture = "+currentLang +"; this.change.send(); }", pos);
 				
 				fields.push( { name:node.name, doc:null, meta:[], access:[APublic], kind:FFun(  { args:[], ret:null, expr:expr, params:[] } ), pos:pos } );
 				
@@ -218,7 +225,8 @@ class LangMacro
 			}
 			else if ( el.has.func)
 			{
-				consLines += el.name + ":'" + el.innerData  + "',";
+				//TODO: this should point to 
+				
 			}
 			else
 			{
@@ -230,9 +238,32 @@ class LangMacro
 		return consLines;
 	}
 	
+	static private function followAndFillBindables(xml:Fast, ?consLines:String = "" )
+	{
+		for (el in xml.elements) 
+		{
+			if ( isLeaf( el) )
+			{
+				consLines += el.name + ":" + "new primevc.core.Bindable<String>('" + el.innerData+"')"  + ",";
+			}
+			else if ( el.has.func)
+			{
+				//ignore
+				
+			}
+			else
+			{
+				consLines += el.name  + ":{";
+				consLines += followAndFillBindables(el);
+				consLines += "}";
+			}
+		}
+		return consLines;
+	}
 	
 	
-	static private function traverseXMLGenerateExpValues(xml:Fast )
+	
+	static private function traverseXMLGenerateExpValues(xml:Fast, ?parent:String = "" )
 	{
 		var result = "";
 		//TODO: this method write the strings for pusshing the values of any language into langman.bindables
@@ -241,7 +272,8 @@ class LangMacro
 		{
 			if ( isLeaf( el) )
 			{
-				result +=  "this.bindables." + el.name + ".value = this.current." +el.name +";";
+			
+				result +=  "this.bindables." + (parent.length > 0? parent + "." : "") + el.name + ".value = this.current." + (parent.length > 0?parent + "." : "") +el.name +";";
 			}
 			else if ( el.has.func)
 			{
@@ -249,7 +281,7 @@ class LangMacro
 			}
 			else
 			{
-				//result += traverseXMLGenerateExpValues(el);
+				result += traverseXMLGenerateExpValues(el, (parent.length > 0? parent + "." : "")  + el.name);
 			}
 		}
 		return result;
@@ -309,7 +341,7 @@ class LangMacro
 		{
 			if ( isLeaf( el) )
 			{
-				if (  MacroExprUtil.getField( type.fields, el.name) == null )
+				//if (  MacroExprUtil.getField( type.fields, el.name) == null )
 					type.fields.push( { name :el.name, doc : null, meta : [], access : [APublic], kind :FieldType.FVar(TPath( { pack : ["primevc", "core"], name : "Bindable", params : [ TPType( TPath( { pack : [], name : "String", params : [], sub : null } )) ], sub :null } )), pos : Context.currentPos() }   );
 				
 				//constructor data for LagManBinds
@@ -321,7 +353,19 @@ class LangMacro
 			}
 			else
 			{ 
-				constructorLines = traverseXMLLangManBind(el, type, constructorLines);
+				var t = { 
+				kind:TDStructure, name: el.name.capitalizeFirstLetter() + "structBindable" ,
+				fields:[ ], pack: [],  pos:Context.currentPos(), 	meta:[], params:[], isExtern:false
+				};
+
+				type.fields.push( { name :el.name, doc : null, meta : [], access : [APublic], kind :FieldType.FVar(TPath( { pack : [], name : t.name, params : [], sub : null } )), pos : Context.currentPos() }   );
+				//constructorLines = traverseXMLLangManBind(el, t, constructorLines);
+				traverseXMLLangManBind(el, t, constructorLines);
+				
+				constructorLines += el.name +" = {" + followAndFillBindables(el) + "}";
+				Context.defineType(t);
+				
+				
 			}
 	
 		}
