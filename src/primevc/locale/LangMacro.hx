@@ -5,16 +5,16 @@ import haxe.macro.Expr;
 import haxe.xml.Fast;
 import primevc.utils.FastArray;
 import primevc.utils.MacroUtils;
-import primevc.utils.StringUtil;
 
+
+using primevc.utils.StringUtil;
 
 class LangMacro 
 {
 	
-
+	
 	@:macro static public function buildInterface()  :Array<Field> 
 	{
-
 		var pos = haxe.macro.Context.currentPos();
 		var fields = haxe.macro.Context.getBuildFields();
 		
@@ -37,7 +37,6 @@ class LangMacro
 				}
 			}
 		}
-//
 
 		var t = { pack:[], pos:pos, meta:[], params:[], isExtern:false, kind:TDClass(), name:"LangManBindables", fields:[] };
 		
@@ -52,20 +51,16 @@ class LangMacro
 				traverseXMLInterface(lang, fields);
 				//Bindables creation
 				constructorWords = traverseXMLLangManBind(lang, t);
-
 			}
 		}
-	
-	
-		
 		t.fields.push( { meta:[], name:"new", doc:null, access:[APublic], kind:FFun( { args:[], ret:null, expr:Context.parse("{" + constructorWords + "}", pos), params:[] } ), pos:pos } );
 		
 		Context.defineType(t);
 	
-		
 		return fields;
 	}
 	
+
 	@:macro public static function build() : Array<Field> 
     {        
 
@@ -98,7 +93,7 @@ class LangMacro
 			for (node in yaml.elements) //for each language in each yaml
 			{
 				var t = { // create Class of Type NameLanguage (Ex Dutch,Spanish) implementing ILang
-				  kind:TDClass(null, [ { pack:"primevc.locale".split("."), name:"ILang", params:[ ], sub:null } ], false), name:StringUtil.capitalizeFirstLetter(node.name),
+				  kind:TDClass(null, [ { pack:"primevc.locale".split("."), name:"ILang", params:[ ], sub:null } ], false), name:node.name.capitalizeFirstLetter(),
 				  fields:[ ], pack: [],  pos:pos, 	meta:[], params:[],	 isExtern:false
 				};
 				
@@ -109,6 +104,8 @@ class LangMacro
 				//traverseXMLGenerateTypes fills languages instances.
 				//ATM only top level strings and functions are working. Remains to get  all values enclosed in a sublevel  working. Ex. level1.level2. wont work.
 				constructorWords = traverseXMLGenerateTypes(node, t, "");
+				
+				trace(constructorWords);
 				
 				//TODO: this method write the strings for pusshing the values of any language into langman.bindables
 				//exprUpdateValues = traverseXMLGenerateExpValues(node, t, "");
@@ -122,10 +119,22 @@ class LangMacro
 				//add methods for changing langman language
 				//TODO: Make languages instance singletons}
 				
-				//TODO: check if culture named X exists in thx.cultures package
-				var currentLang = "thx.cultures." + StringUtil.capitalizeFirstLetter(node.name) + ".culture";
 				
-				var expr = Context.parse("{this.current = new " + StringUtil.capitalizeFirstLetter(node.name)  +"();" + exprUpdateValues +" thx.culture.Culture.defaultCulture = "+currentLang +"; this.change.send(); }", pos);
+				//check if culture exists in thx
+				
+				var cultureClassName = "thx.cultures." + node.name.capitalizeFirstLetter();
+				try
+				{
+					Context.getType(cultureClassName);
+				}
+				catch( msg : String )
+				{
+					Context.error( cultureClassName + " does not exist",pos);
+				}
+				
+				var currentLang = cultureClassName + ".culture";
+				
+				var expr = Context.parse("{this.current = new " + node.name.capitalizeFirstLetter()  +"();" + exprUpdateValues +" thx.culture.Culture.defaultCulture = "+currentLang +"; this.change.send(); }", pos);
 				
 				fields.push( { name:node.name, doc:null, meta:[], access:[APublic], kind:FFun(  { args:[], ret:null, expr:expr, params:[] } ), pos:pos } );
 				
@@ -185,11 +194,15 @@ class LangMacro
 			{ 
 				//trace("3: " + el.name );
 				//type generated in BuildInterface Method
-				var tintStruct = TPath( { pack : [], name : StringUtil.capitalizeFirstLetter(el.name) + "struct" , params : [], sub : null } );
+				var tintStruct = TPath( { pack : [], name :el.name.capitalizeFirstLetter() + "struct" , params : [], sub : null } );
 
 				typeDefinition.fields.push( { pos:Context.currentPos(), meta:[], name:el.name, doc:null, access:[APublic], kind:FVar(tintStruct) } );
 
+				//consLines += el.name + "= cast { };";
+				
+				consLines += el.name +" = {" + followAndFill(el) + "}";
 			
+				
 				//TODO: FILL LANGUAGES!
 				/* Something like ...
 				 = { comment: { subcomment:"test" }, test:"test" };
@@ -206,7 +219,27 @@ class LangMacro
 	}
 
 	
-	
+	static private function  followAndFill(xml:Fast, ?consLines:String = "" )
+	{
+		for (el in xml.elements) 
+		{
+			if ( isLeaf( el) )
+			{
+				consLines += el.name + ":'" + el.innerData  + "',";
+			}
+			else if ( el.has.func)
+			{
+				//ignore by now
+			}
+			else
+			{
+				consLines += el.name  + ":{";
+				consLines += followAndFill(el);
+				consLines += "}";
+			}
+		}
+		return consLines;
+	}
 	
 	
 	
@@ -264,7 +297,7 @@ class LangMacro
 					else
 					{
 						var t = { 
-						  kind:TDStructure, name: StringUtil.capitalizeFirstLetter(el.name) + "struct" ,
+						  kind:TDStructure, name: el.name.capitalizeFirstLetter() + "struct" ,
 						  fields:[ ], pack: [],  pos:Context.currentPos(), 	meta:[], params:[], isExtern:false
 						};
 						
