@@ -9,7 +9,7 @@ import primevc.utils.MacroUtils;
 
 using primevc.utils.StringUtil;
 using StringTools;
-using Lambda;
+
 
 class LangMacro 
 {
@@ -31,8 +31,10 @@ class LangMacro
 				{
 					if ( file.indexOf(".yaml") > -1 )
 					{
-						var key = file.replace(".yaml", "");
-						langsRaw.set(key , YamlHX.read( neko.io.File.getContent( currentDir + "/" + file) ));
+						 var data = YamlHX.read( neko.io.File.getContent( currentDir + "/" + file) );
+						 var key = data.x.firstChild().nodeName;
+						 
+						 langsRaw.set(key , data);
 					}
 				}
 			}
@@ -44,16 +46,54 @@ class LangMacro
 		var constructorWords = "";
 	
 
-
+		//var hashMissing = new Hash<String>();
+		//for (yaml in langsRaw) 
+		//{
+			//for (lang in yaml.elements)
+			//{
+				//for () 
+				//{
+					//
+				//}
+			//}
+		//}
+		
+		
+		var list = [];
 		for (yaml in langsRaw) 
 		{
 			for (lang in yaml.elements)
 			{
 				// ILang interface generation. Also creates Typedefs.
-				traverseXMLInterface(lang, fields);
+				list = list.concat ( traverseXMLInterface(lang, fields) );
 			}
 		}
 		
+		var hashMissing = new Hash<Bool>();
+		for (l in list) 
+		{
+			hashMissing.set(l, false);
+		}
+		
+		for (yaml in langsRaw) 
+		{
+			var lang = yaml.elements.next();
+			for (h in hashMissing.keys())
+			{
+				try
+				{
+					yaml.get(lang.name +"." +  h);
+				}
+				catch (msg:String)
+				{
+					if ( msg.indexOf("YamlHX.get() error") > -1)
+					{
+						trace("missing " +lang.name + "." + h );
+					}
+				}
+			}
+		}
+
 		var defaultLang = langsRaw.get("EnNZ");
 		
 		constructorWords = traverseXMLLangManBind( new Fast(defaultLang.x.firstElement()), t);
@@ -76,7 +116,6 @@ class LangMacro
 		var tint = TPath( { pack : [], name : "String", params : [], sub : null } );
 		
 		var langsRaw = new Hash<YamlHX>();
-		
 		for ( dir in Context.getClassPath() )
 		{
 			var currentDir =  dir + "i18n";
@@ -93,14 +132,14 @@ class LangMacro
 		}
 		
 		
-		
 		for (yaml in langsRaw) // for yamls in yamls array
 		{
 			for (node in yaml.elements) //for each language in each yaml
 			{
+				
 				var t = { // create Class of Type NameLanguage (Ex Dutch,Spanish) implementing ILang
 				  kind:TDClass(null, [ { pack:"primevc.locale".split("."), name:"ILang", params:[ ], sub:null } ], false), name:node.name.capitalizeFirstLetter(),
-				  fields:[ ], pack: [],  pos:pos, 	meta:[], params:[],	 isExtern:false
+				  fields:[ ], pack: ["langMan"],  pos:pos, 	meta:[], params:[],	 isExtern:false //added langMan in pack,else Ill get TypeError: Error #1064: 
 				};
 				
 				var constructorWords = "";
@@ -123,12 +162,7 @@ class LangMacro
 				
 				//create class named Language implementing ILang
 				Context.defineType(t);
-
-				//add methods for changing langman language
-				//TODO: Make languages instance singletons}
 				
-				
-				//check if culture exists in thx
 				
 				var cultureClassName = "thx.cultures." + node.name.capitalizeFirstLetter();
 				try
@@ -143,7 +177,7 @@ class LangMacro
 				var currentLang = cultureClassName + ".culture";
 				
 				
-				var expr = Context.parse("{this.current = new " + node.name.capitalizeFirstLetter()  +"();" + exprUpdateValues + " thx.culture.Culture.defaultCulture = "+currentLang +"; this.change.send(); }", pos);
+				var expr = Context.parse("{this.current = new langMan." + node.name.capitalizeFirstLetter()  +"();" + exprUpdateValues + " thx.culture.Culture.defaultCulture = "+currentLang +"; this.change.send(); }", pos);
 				
 				fields.push( { name:node.name, doc:null, meta:[], access:[APublic], kind:FFun(  { args:[], ret:null, expr:expr, params:[] } ), pos:pos } );
 				
@@ -296,23 +330,26 @@ class LangMacro
 
 	
 
-	static private function traverseXMLInterface(xml:Fast,fields:Array<Field>) 
+	static private function traverseXMLInterface(xml:Fast, fields:Array<Field>, ?parent:String = "")
 	{
-		
+		var result = [];
 		var tintString = TPath( { pack : [], name : "String", params : [], sub : null } );
 		for (el in xml.elements) 
 		{
-
+			result.push( parent + (parent.length > 0?".":"") + el.name);
 			if (  MacroExprUtil.getField( fields, el.name) == null )
 			{
 				if ( isLeaf( el) )
 				{
 					fields.push( { name :el.name, doc : null, meta : [], access : [APublic], kind :FieldType.FVar(TPath( { pack : [], name : "String", params : [], sub : null } )), pos : Context.currentPos() }   );
+					
+				
 				}
 				else
 				{
 					if( el.has.func )
 					{
+						
 						var farg1:FunctionArg =  { name:"val", opt:false, type:TPath( { pack : [], name : "Int", params : [], sub : null } ) };
 						fields.push( { pos:Context.currentPos(), meta:[], name:el.name, doc:null, access:[APublic], kind:FFun(  { args:[farg1 ], ret:tintString, expr:null, params:[] } ) } );
 					}
@@ -324,12 +361,14 @@ class LangMacro
 						};
 						
 						fields.push( { name :el.name, doc : null, meta : [], access : [APublic], kind :FieldType.FVar(TPath( { pack : [], name : t.name, params : [], sub : null } )), pos : Context.currentPos() }   );
-						traverseXMLInterface(el, t.fields);
+						result = result.concat(traverseXMLInterface(el, t.fields, parent + (parent.length > 0?".":"")  + el.name) );
 						Context.defineType(t);
 					}
 				}
 			}
 		}
+		return result;
+		
 	}
 	
 	
@@ -392,21 +431,12 @@ class LangMacro
 		}
 	}
 	
-	
-	
+
 	private static inline function addSlashes(s)
 	{
 		return '"' + s + '"';
 	}
 	
-		private static inline function simpleTPath(s:String)
-	{
-		return TPath( { pack : [] , name : s, params : [], sub : null } );
-	}
-	
-	private static inline function simpleTPathString()
-	{
-		return simpleTPath("String");
-	}
+
 	#end
 }
