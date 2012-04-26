@@ -9,7 +9,7 @@ import primevc.utils.MacroUtils;
 
 using primevc.utils.StringUtil;
 using StringTools;
-
+using Lambda;
 
 class LangMacro 
 {
@@ -41,6 +41,11 @@ class LangMacro
 		}
 
 	
+		if (langsRaw.empty())
+		{
+			Context.error("There are no .yaml files", pos);
+		}
+		
 		var t = { pack:[], pos:pos, meta:[], params:[], isExtern:false, kind:TDClass(), name:"LangManBindables", fields:[] };
 		
 		var constructorWords = "";
@@ -82,6 +87,8 @@ class LangMacro
 		}
 
 		var defaultLang = langsRaw.get("EnNZ");
+		
+		if (defaultLang == null) Context.error("Default language not defined", pos);
 		
 		
 		constructorWords = traverseXMLLangManBind( new Fast(defaultLang.x.firstElement()), t);
