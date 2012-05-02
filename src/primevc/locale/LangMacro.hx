@@ -280,7 +280,7 @@ class LangMacro
 			{
 				consLines += el.name  + ":{";
 				consLines += followAndFill(el,typeDefinition);
-				consLines += "}";
+				consLines += "},";
 			}
 		}
 		return consLines;
@@ -303,7 +303,7 @@ class LangMacro
 			{
 				consLines += el.name  + ":{";
 				consLines += followAndFillBindables(el);
-				consLines += "}";
+				consLines += "},";
 			}
 		}
 		return consLines;
