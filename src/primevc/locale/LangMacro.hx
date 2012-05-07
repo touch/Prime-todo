@@ -11,6 +11,13 @@ using primevc.utils.StringUtil;
 using StringTools;
 using Lambda;
 
+enum ElementType {
+	leaf;
+	plural;
+	node;
+	func;
+}
+
 class LangMacro 
 {
 	
@@ -191,8 +198,9 @@ class LangMacro
 		var tint = TPath( { pack : [], name : "String", params : [], sub : null } );
 		for (el in xml.elements) 
 		{
-			if ( isLeaf( el) )
+			switch( getElementType(el) )
 			{
+				case leaf:
 				//trace("1: " + el.name );
 				typeDefinition.fields.push( { name : el.name, doc : null, meta : [], access : [APublic], kind : FVar(tint), pos : Context.currentPos() } );
 				//
@@ -201,10 +209,8 @@ class LangMacro
 				//
 				///*how the data for all strings will be pushed into bindables*/
 				
-			}
-			else if( el.has.func )
-			{
-
+				
+				case plural:
 				//TODO: Move this into a  static function
 				var farg1:FunctionArg =  { name:"param1", opt:false, type:TPath( { pack : [], name : "Int", params : [], sub : null } ) };
 				
@@ -224,18 +230,26 @@ class LangMacro
 				funcData += "}";
 				
 				typeDefinition.fields.push( { pos: Context.currentPos(), meta:[], name:el.name, doc:null, access:[APublic], kind:FFun(  { args:[farg1 ], ret:tint, expr:Context.parse(funcData,  Context.currentPos()), params:[] } ) } );
-			}
-			else
-			{ 
+				
+				case node:
 				//type generated in BuildInterface Method
 				var tintStruct = TPath( { pack : [], name :el.name.capitalizeFirstLetter() + "struct" , params : [], sub : null } );
-
 				typeDefinition.fields.push( { pos:Context.currentPos(), meta:[], name:el.name, doc:null, access:[APublic], kind:FVar(tintStruct) } );
 
-				consLines += el.name +" = {" + followAndFill(el,typeDefinition) + "}";
+				consLines += el.name +" = {" + followAndFill(el, typeDefinition) + "}";
 				
-				
+				case func:
+				var args:Array<FunctionArg> = [];
+				var argsString = [];
+				for ( i in 0 ... Std.parseInt(el.att.func) )
+				{
+					args.push ( { name:"val" + i , opt:false, type:MacroExprUtil.createTypePath("Dynamic") } );
+					argsString.push( "val" + i );
+				}
+				var expFunc = Context.parse("{return Strings.format(" + addSlashes(el.node.value.innerData) + "," + argsString + ");}", Context.currentPos());
+				typeDefinition.fields.push( { pos:Context.currentPos(), meta:[], name:el.name, doc:null, access:[APublic], kind:FFun(  { args:args, ret:MacroExprUtil.createTypePath("String"), expr:expFunc, params:[] } ) } );
 			}
+
 		}
 		
 		return consLines;
@@ -245,14 +259,15 @@ class LangMacro
 	
 	static private function  followAndFill(xml:Fast, typeDefinition:TypeDefinition, ?consLines:String = "")
 	{
+		
 		for (el in xml.elements) 
 		{
-			if ( isLeaf( el) )
+			switch(getElementType(el))
 			{
+				case leaf:
 				consLines += el.name + ":'" + el.innerData  + "',";
-			}
-			else if ( el.has.func)
-			{
+				
+				case plural:
 				var tint = TPath( { pack : [], name : "String", params : [], sub : null } );
 				//TODO: this should point to 
 				var farg1:FunctionArg =  { name:"param1", opt:false, type:TPath( { pack : [], name : "Int", params : [], sub : null } ) };
@@ -275,12 +290,13 @@ class LangMacro
 				typeDefinition.fields.push( { pos: Context.currentPos(), meta:[], name:el.name, doc:null, access:[APublic], kind:FFun(  { args:[farg1 ], ret:tint, expr:Context.parse(funcData,  Context.currentPos()), params:[] } ) } );
 				
 				consLines += el.name + ":this." + el.name  + ",";
-			}
-			else
-			{
+				
+				case node:
 				consLines += el.name  + ":{";
 				consLines += followAndFill(el,typeDefinition);
 				consLines += "},";
+				
+				case func:
 			}
 		}
 		return consLines;
@@ -290,20 +306,18 @@ class LangMacro
 	{
 		for (el in xml.elements) 
 		{
-			if ( isLeaf( el) )
+			switch( getElementType(el) )
 			{
+				case leaf:
 				consLines += el.name + ":" + "new primevc.core.Bindable<String>('" + el.innerData+"')"  + ",";
-			}
-			else if ( el.has.func)
-			{
-				//ignore
 				
-			}
-			else
-			{
+				case node:
 				consLines += el.name  + ":{";
 				consLines += followAndFillBindables(el);
 				consLines += "},";
+				
+				case func:
+				case plural:
 			}
 		}
 		return consLines;
@@ -318,29 +332,45 @@ class LangMacro
 		//exprUpdateValues += "bindables." + word.name + ".value = this.current." + word.name + ";";
 		for (el in xml.elements) 
 		{
-			if ( isLeaf( el) )
+			switch( getElementType(el) )
 			{
-			
+				case leaf:
 				result +=  "this.bindables." + (parent.length > 0? parent + "." : "") + el.name + ".value = this.current." + (parent.length > 0?parent + "." : "") +el.name +";";
-			}
-			else if ( el.has.func)
-			{
 				
-			}
-			else
-			{
+				case node:
 				result += traverseXMLGenerateExpValues(el, (parent.length > 0? parent + "." : "")  + el.name);
+				
+				case func:
+				case plural:
 			}
 		}
 		return result;
 	}
 	
+	static private function getElementType(xml:Fast)
+	{
+		if ( isLeaf(xml) )		return leaf;
+		if ( isPlural(xml) )	return plural;
+		if ( isFunction(xml) )	return func;
+		return node;
+	}
+	
 
-	static public inline function isLeaf(xml:Fast)
+	static private inline function isLeaf(xml:Fast)
 	{
 		return !xml.elements.hasNext();
-		
 	}
+	
+	static private inline function isPlural(xml:Fast)
+	{
+		return xml.has.plural;
+	}
+	
+	static private inline function isFunction(xml:Fast)
+	{
+		return xml.has.func;
+	}
+	
 
 	
 
@@ -353,36 +383,39 @@ class LangMacro
 			result.push( parent + (parent.length > 0?".":"") + el.name);
 			if (  MacroExprUtil.getField( fields, el.name) == null )
 			{
-				if ( isLeaf( el) )
+				switch(getElementType(el))
 				{
+					case leaf:
 					fields.push( { name :el.name, doc : null, meta : [], access : [APublic], kind :FieldType.FVar(TPath( { pack : [], name : "String", params : [], sub : null } )), pos : Context.currentPos() }   );
 					
-				
-				}
-				else
-				{
-					if( el.has.func )
-					{
+					case plural:
+					var farg1:FunctionArg =  { name:"val", opt:false, type:TPath( { pack : [], name : "Int", params : [], sub : null } ) };
+					fields.push( { pos:Context.currentPos(), meta:[], name:el.name, doc:null, access:[APublic], kind:FFun(  { args:[farg1 ], ret:tintString, expr:null, params:[] } ) } );
+
+					case node:
+					var t = { 
+					  kind:TDStructure, name: el.name.capitalizeFirstLetter() + "struct" ,
+					  fields:[ ], pack: [],  pos:Context.currentPos(), 	meta:[], params:[], isExtern:false
+					};
+					
+					fields.push( { name :el.name, doc : null, meta : [], access : [APublic], kind :FieldType.FVar(TPath( { pack : [], name : t.name, params : [], sub : null } )), pos : Context.currentPos() }   );
+					result = result.concat(traverseXMLInterface(el, t.fields, parent + (parent.length > 0?".":"")  + el.name) );
+					Context.defineType(t);
 						
-						var farg1:FunctionArg =  { name:"val", opt:false, type:TPath( { pack : [], name : "Int", params : [], sub : null } ) };
-						fields.push( { pos:Context.currentPos(), meta:[], name:el.name, doc:null, access:[APublic], kind:FFun(  { args:[farg1 ], ret:tintString, expr:null, params:[] } ) } );
-					}
-					else
+					case func:
+					var argsCount =  el.att.func;
+					var args:Array<FunctionArg> = [];
+					for ( i in 0 ... Std.parseInt(argsCount) )
 					{
-						var t = { 
-						  kind:TDStructure, name: el.name.capitalizeFirstLetter() + "struct" ,
-						  fields:[ ], pack: [],  pos:Context.currentPos(), 	meta:[], params:[], isExtern:false
-						};
-						
-						fields.push( { name :el.name, doc : null, meta : [], access : [APublic], kind :FieldType.FVar(TPath( { pack : [], name : t.name, params : [], sub : null } )), pos : Context.currentPos() }   );
-						result = result.concat(traverseXMLInterface(el, t.fields, parent + (parent.length > 0?".":"")  + el.name) );
-						Context.defineType(t);
+						args.push ( { name:"val" + i , opt:false, type:TPath( { pack : [], name : "Dynamic", params : [], sub : null } ) } );
 					}
+					fields.push( { pos:Context.currentPos(), meta:[], name:el.name, doc:null, access:[APublic], kind:FFun(  { args:args, ret:tintString, expr:null, params:[] } ) } );
+					
+					
 				}
 			}
 		}
 		return result;
-		
 	}
 	
 	
@@ -391,19 +424,18 @@ class LangMacro
 		
 		for (el in xml.elements) 
 		{
-			if ( isLeaf( el) )
+			switch( getElementType(el))
 			{
+				case leaf:
 				type.fields.push( { name :el.name, doc : null, meta : [], access : [APublic], kind :FieldType.FVar(TPath( { pack : ["primevc", "core"], name : "Bindable", params : [ TPType( TPath( { pack : [], name : "String", params : [], sub : null } )) ], sub :null } )), pos : Context.currentPos() }   );
 				
 				//constructor data for LagManBinds
 				constructorLines +=  el.name + " = new primevc.core.Bindable<String>('" +  el.innerData + "');";
-			}
-			else if( el.has.func )
-			{
+
+				case plural:
 				//not bindable
-			}
-			else
-			{ 
+				
+				case node:
 				var t = { 
 				kind:TDStructure, name: el.name.capitalizeFirstLetter() + "structBindable" ,
 				fields:[ ], pack: [],  pos:Context.currentPos(), 	meta:[], params:[], isExtern:false
@@ -414,10 +446,9 @@ class LangMacro
 				
 				constructorLines += el.name +" = {" + followAndFillBindables(el) + "}";
 				Context.defineType(t);
-				
-				
+
+				case func:
 			}
-	
 		}
 		return  constructorLines;
 	}
@@ -431,7 +462,7 @@ class LangMacro
 			{
 				f(el);
 			}
-			else if( el.has.func )
+			else if( el.has.plural )
 			{
 				f(el);
 			}

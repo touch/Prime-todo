@@ -3,6 +3,8 @@ EnUS:
  opentasks: Open Tasks
  removetask: Remove Task
  addtask: Add Task
+ describe: !!func3
+  value: price: {0:C} tax: {1:C} || price+tax: {2:C}
  ok: ok
  g1:
   comments: !!pl

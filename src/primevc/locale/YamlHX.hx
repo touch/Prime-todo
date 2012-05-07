@@ -132,8 +132,12 @@ class YamlHX extends Fast
               new_element.set("yaml-alias", value.substr(value.indexOf("*")+1)); // should be yaml:alias
 						} else if (StringTools.trim(value) == "!!pl") // !!type func hack
 						{
-							new_element.set("func", "type");
-						}else 
+							new_element.set("plural", "plural");
+						} else if (StringTools.trim(value).indexOf('!!func') > -1) // !!type func hack
+						{
+							new_element.set("func", StringTools.trim(value).split("!!func")[1]);
+						}
+						else 
 						{			
 							new_element.addChild(Xml.createPCData(value));
 						}

@@ -68,8 +68,8 @@ class TodoGUI extends UIWindow
 		//
 		english.userEvents.mouse.click.observe( this, function () { TodoFacade.langMan.EnUS(); } );
 		dutch.userEvents.mouse.click.observe  ( this, function () { TodoFacade.langMan.NlNL(); } );
-		spanish.userEvents.mouse.click.observe( this, function () { TodoFacade.langMan.EsAR(); } );
-		russian.userEvents.mouse.click.observe( this, function () { TodoFacade.langMan.RuRU(); } );
+		//spanish.userEvents.mouse.click.observe( this, function () { TodoFacade.langMan.EsAR(); } );
+		//russian.userEvents.mouse.click.observe( this, function () { TodoFacade.langMan.RuRU(); } );
 		
 		
 	}

@@ -20,9 +20,7 @@ class TodoFacade extends Facade < TodoEvents, TodoModel, IDisposable, TodoContro
 	
 		TodoFacade.langMan = new LangMan();
 		TodoFacade.langMan.change.observe(this, test);
-		//TodoFacade.langMan.enUS();
-		TodoFacade.langMan.EnNZ();
-		
+		TodoFacade.langMan.EnUS();
 		
 		TodoFacade.langMan.bindables.g1.g2.g3.test1.change.bind(this, function(a, b) { trace(a); } );
 		
@@ -32,12 +30,11 @@ class TodoFacade extends Facade < TodoEvents, TodoModel, IDisposable, TodoContro
 	
 	private function test() 
 	{
-		trace( TodoFacade.langMan.current.g1.comments(0) );
-		trace( TodoFacade.langMan.current.g1.comments(1) );
-		trace( TodoFacade.langMan.current.g1.comments(2) );
-		trace( TodoFacade.langMan.current.g1.comments(6) );
-		trace( TodoFacade.langMan.current.g1.comments(10) );
+		var taxValue = .1;
+		var price = 15.25;
+		var tax = price * taxValue;
 		
+		trace(TodoFacade.langMan.current.describe(price, tax, price + tax));
 	}
 	
 	override private function setupModel ()			{ model			= new TodoModel(); } 
