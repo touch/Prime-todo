@@ -110,7 +110,6 @@ class LangMacro
 
 	@:macro public static function build() : Array<Field> 
     {        
-
 		var pos = haxe.macro.Context.currentPos();
 		var fields = haxe.macro.Context.getBuildFields();
 		
@@ -153,15 +152,11 @@ class LangMacro
 	
 				exprUpdateValues = traverseXMLGenerateExpValues(node, "");
 				
-			
-				
-
 				//add consturctor to Languages classses
 				t.fields.push( { meta:[], name:"new", doc:null, access:[APublic], kind:FFun( { args:[], ret:null, expr:Context.parse("{"+ constructorWords + "}", pos), params:[] } ), pos:pos } );
 				
 				//create class named Language implementing ILang
 				Context.defineType(t);
-				
 				
 				var cultureClassName = "thx.cultures." + node.name.capitalizeFirstLetter();
 				try
@@ -208,7 +203,6 @@ class LangMacro
 				consLines +=  el.name + "=" + addSlashes( el.innerData) + "; ";
 				//
 				///*how the data for all strings will be pushed into bindables*/
-				
 				
 				case plural:
 				//TODO: Move this into a  static function
@@ -297,6 +291,17 @@ class LangMacro
 				consLines += "},";
 				
 				case func:
+				var args:Array<FunctionArg> = [];
+				var argsString = [];
+				for ( i in 0 ... Std.parseInt(el.att.func) )
+				{
+					args.push ( { name:"val" + i , opt:false, type:MacroExprUtil.createTypePath("Dynamic") } );
+					argsString.push( "val" + i );
+				}
+				var expFunc = Context.parse("{return Strings.format(" + addSlashes(el.node.value.innerData) + "," + argsString + ");}", Context.currentPos());
+				typeDefinition.fields.push( { pos:Context.currentPos(), meta:[], name:el.name, doc:null, access:[APublic], kind:FFun(  { args:args, ret:MacroExprUtil.createTypePath("String"), expr:expFunc, params:[] } ) } );
+				consLines += el.name + ":this." + el.name  + ",";
+
 			}
 		}
 		return consLines;
