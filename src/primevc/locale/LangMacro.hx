@@ -235,13 +235,29 @@ class LangMacro
 				case func:
 				var args:Array<FunctionArg> = [];
 				var argsString = [];
-				for ( i in 0 ... Std.parseInt(el.att.func) )
-				{
-					args.push ( { name:"val" + i , opt:false, type:MacroExprUtil.createTypePath("Dynamic") } );
-					argsString.push( "val" + i );
-				}
+				//trace(el.innerData);
+				var regExp = new EReg("{([^:}]*):?([^}])*}", "");
 				
-				var expFunc = Context.parse("{return Strings.format(" + addSlashes(el.innerData) + "," + argsString + ");}", Context.currentPos());
+				var auxResult = [];
+				var varNames:Array<String> = [];
+				var i = -1;
+				var nodeParsedValue = regExp.customReplace(el.innerData, function (e) {
+					var lastVal =  varNames.indexOf(e.matched(1));
+					if (lastVal == -1)
+					{
+						i++;
+						varNames.push( e.matched(1) );
+						lastVal = i;
+						
+					}
+					return StringTools.replace(e.matched(0), e.matched(1), Std.string(lastVal));
+				});
+					
+				for ( i in 0 ... varNames.length )
+				{
+					args.push ( { name:varNames[i] , opt:false, type:MacroExprUtil.createTypePath("Dynamic") } );
+				}
+				var expFunc = Context.parse("{return Strings.format(" + addSlashes(nodeParsedValue) + "," + varNames + ");}", Context.currentPos());
 				typeDefinition.fields.push( { pos:Context.currentPos(), meta:[], name:el.name, doc:null, access:[APublic], kind:FFun(  { args:args, ret:MacroExprUtil.createTypePath("String"), expr:expFunc, params:[] } ) } );
 			}
 
