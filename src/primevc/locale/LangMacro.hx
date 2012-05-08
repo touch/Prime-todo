@@ -301,9 +301,15 @@ class LangMacro
 				var varNames:Array<String> = [];
 				var i = -1;
 				var nodeParsedValue = regExp.customReplace(el.innerData, function (e) {
-					i++;
-					varNames.push( e.matched(1) );
-					return StringTools.replace(e.matched(0), e.matched(1), Std.string(i));
+					var lastVal =  varNames.indexOf(e.matched(1));
+					if (lastVal == -1)
+					{
+						i++;
+						varNames.push( e.matched(1) );
+						lastVal = i;
+						
+					}
+					return StringTools.replace(e.matched(0), e.matched(1), Std.string(lastVal));
 				});
 					
 				for ( i in 0 ... varNames.length )
@@ -423,10 +429,23 @@ class LangMacro
 					case func:
 					var argsCount =  el.att.func;
 					var args:Array<FunctionArg> = [];
-					for ( i in 0 ... Std.parseInt(argsCount) )
+					
+					var regExp = new EReg("{([^:}]*):?([^}])*}", "");
+				
+					var varNames:Array<String> = [];
+					regExp.customReplace(el.innerData, function (e) {
+						if (varNames.indexOf(e.matched(1)) == -1)
+						{
+							varNames.push( e.matched(1) );
+						}
+						return "";
+					});
+						
+					for ( i in 0 ... varNames.length )
 					{
-						args.push ( { name:"val" + i , opt:false, type:TPath( { pack : [], name : "Dynamic", params : [], sub : null } ) } );
+						args.push ( { name:varNames[i] , opt:false, type:TPath( { pack : [], name : "Dynamic", params : [], sub : null } ) } );
 					}
+					
 					fields.push( { pos:Context.currentPos(), meta:[], name:el.name, doc:null, access:[APublic], kind:FFun(  { args:args, ret:tintString, expr:null, params:[] } ) } );
 					
 					

@@ -24,7 +24,10 @@ class TodoFacade extends Facade < TodoEvents, TodoModel, IDisposable, TodoContro
 		
 		TodoFacade.langMan.bindables.g1.g2.g3.test1.change.bind(this, function(a, b) { trace(a); } );
 		
-		trace(TodoFacade.langMan.current.test.describe(1, 2, 3,4));
+		trace(TodoFacade.langMan.current.test.describe(10, 110, 120));
+		
+		
+		
 
 		
 		super();
