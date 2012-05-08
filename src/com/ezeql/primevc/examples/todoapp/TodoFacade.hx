@@ -24,6 +24,9 @@ class TodoFacade extends Facade < TodoEvents, TodoModel, IDisposable, TodoContro
 		
 		TodoFacade.langMan.bindables.g1.g2.g3.test1.change.bind(this, function(a, b) { trace(a); } );
 		
+		trace(TodoFacade.langMan.current.test.describe(1, 2, 3,4));
+
+		
 		super();
 		
 	}
@@ -34,7 +37,7 @@ class TodoFacade extends Facade < TodoEvents, TodoModel, IDisposable, TodoContro
 		var price = 15.25;
 		var tax = price * taxValue;
 		
-		trace(TodoFacade.langMan.current.test.describe(price, tax, price + tax));
+		
 	}
 	
 	override private function setupModel ()			{ model			= new TodoModel(); } 

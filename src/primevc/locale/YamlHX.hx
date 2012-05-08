@@ -117,9 +117,10 @@ class YamlHX extends Fast
 						key = key.substr(tabbing.length);
 						indents++;
 					}
-/*          trace(indents);     */
-										
-					// check for value
+					var regExp = new EReg("{([^:}]*):?([^}])*}", "");
+					
+				    
+					
 					value = StringTools.trim(l.substr(colon+1));
 					new_element = Xml.createElement(StringTools.trim(key));
 					if(value != ""){
@@ -133,9 +134,17 @@ class YamlHX extends Fast
 						} else if (StringTools.trim(value) == "!!pl") // !!type func hack
 						{
 							new_element.set("plural", "plural");
-						} else if (StringTools.trim(value).indexOf('!!func') > -1) // !!type func hack
+						} else if ( regExp.match(StringTools.trim(value))) // TODO: Move to LangMan
 						{
-							new_element.set("func", StringTools.trim(value).split("!!func")[1]);
+							//TODO: check if plural, ignore
+							var auxResult = [];
+							regExp.customReplace(value, function (e) {
+							auxResult.push(	e.matched(0) );
+							return "";
+							});
+							
+							new_element.set("func", Std.string(auxResult.length));
+							new_element.addChild(Xml.createPCData(value));
 						}
 						else 
 						{			

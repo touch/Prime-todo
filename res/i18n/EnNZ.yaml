@@ -5,8 +5,7 @@ EnNZ:
  addtask: Add Task
  ok: ok
  test:
-  describe: !!func3
-   value: price: {0:C} tax: {1:C} || price+tax: {2:C}
+  describe: price {price:C}  price {price:C} price {price:C}price {price:C} price {price:C}
  g1:
   comments: !!pl
    zero: {0:I} no comments

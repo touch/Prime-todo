@@ -240,7 +240,8 @@ class LangMacro
 					args.push ( { name:"val" + i , opt:false, type:MacroExprUtil.createTypePath("Dynamic") } );
 					argsString.push( "val" + i );
 				}
-				var expFunc = Context.parse("{return Strings.format(" + addSlashes(el.node.value.innerData) + "," + argsString + ");}", Context.currentPos());
+				
+				var expFunc = Context.parse("{return Strings.format(" + addSlashes(el.innerData) + "," + argsString + ");}", Context.currentPos());
 				typeDefinition.fields.push( { pos:Context.currentPos(), meta:[], name:el.name, doc:null, access:[APublic], kind:FFun(  { args:args, ret:MacroExprUtil.createTypePath("String"), expr:expFunc, params:[] } ) } );
 			}
 
@@ -293,12 +294,23 @@ class LangMacro
 				case func:
 				var args:Array<FunctionArg> = [];
 				var argsString = [];
-				for ( i in 0 ... Std.parseInt(el.att.func) )
+				//trace(el.innerData);
+				var regExp = new EReg("{([^:}]*):?([^}])*}", "");
+				
+				var auxResult = [];
+				var varNames:Array<String> = [];
+				var i = -1;
+				var nodeParsedValue = regExp.customReplace(el.innerData, function (e) {
+					i++;
+					varNames.push( e.matched(1) );
+					return StringTools.replace(e.matched(0), e.matched(1), Std.string(i));
+				});
+					
+				for ( i in 0 ... varNames.length )
 				{
-					args.push ( { name:"val" + i , opt:false, type:MacroExprUtil.createTypePath("Dynamic") } );
-					argsString.push( "val" + i );
+					args.push ( { name:varNames[i] , opt:false, type:MacroExprUtil.createTypePath("Dynamic") } );
 				}
-				var expFunc = Context.parse("{return Strings.format(" + addSlashes(el.node.value.innerData) + "," + argsString + ");}", Context.currentPos());
+				var expFunc = Context.parse("{return Strings.format(" + addSlashes(nodeParsedValue) + "," + varNames + ");}", Context.currentPos());
 				typeDefinition.fields.push( { pos:Context.currentPos(), meta:[], name:el.name, doc:null, access:[APublic], kind:FFun(  { args:args, ret:MacroExprUtil.createTypePath("String"), expr:expFunc, params:[] } ) } );
 				consLines += el.name + ":this." + el.name  + ",";
 
@@ -354,9 +366,9 @@ class LangMacro
 	
 	static private function getElementType(xml:Fast)
 	{
+		if ( isFunction(xml) )	return func;
 		if ( isLeaf(xml) )		return leaf;
 		if ( isPlural(xml) )	return plural;
-		if ( isFunction(xml) )	return func;
 		return node;
 	}
 	
@@ -390,6 +402,7 @@ class LangMacro
 			{
 				switch(getElementType(el))
 				{
+					
 					case leaf:
 					fields.push( { name :el.name, doc : null, meta : [], access : [APublic], kind :FieldType.FVar(TPath( { pack : [], name : "String", params : [], sub : null } )), pos : Context.currentPos() }   );
 					
