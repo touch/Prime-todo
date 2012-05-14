@@ -13,23 +13,15 @@ import primevc.mvc.Facade;
 
 class TodoFacade extends Facade < TodoEvents, TodoModel, IDisposable, TodoController, TodoAppView >
 {
-	public static var langMan(default, null):LangMan;
-
 	public function new() 
 	{
-	
-		TodoFacade.langMan = new LangMan();
-		TodoFacade.langMan.change.observe(this, test);
-		TodoFacade.langMan.EnNZ();
 		
-		TodoFacade.langMan.bindables.g1.g2.g3.test1.change.bind(this, function(a, b) { trace(a); } );
+		LangMan.instance.change.observe(this, test);
+		LangMan.instance.NlNL();
 		
-		trace(TodoFacade.langMan.current.describe(1, 2, 3));
+		//LangMan.instance.bindables.g1.g2.g3.test1.change.bind(this, function(a, b) { trace(a); } );
 		
-		
-		
-
-		
+		trace(LangMan.instance.current.describe(1, 2, 3));
 		super();
 		
 	}

@@ -4,6 +4,7 @@ import primevc.gui.components.Button;
 import primevc.gui.components.DataButton;
 import primevc.gui.components.Label;
 import primevc.gui.core.UIDataContainer;
+import primevc.locale.LangMan;
 
 using primevc.utils.Bind;
 
@@ -28,8 +29,8 @@ class ListRow extends UIDataContainer <DataType>
 		lblTask = new Label("label" + this.id, new Bindable<String>(data.value) );
 		attach(lblTask);
 		
-		btnDelete = new DataButton<String>("b" + this.id, TodoFacade.langMan.bindables.removetask.value, null);
-		btnDelete.data = TodoFacade.langMan.bindables.removetask;
+		btnDelete = new DataButton<String>("b" + this.id, LangMan.instance.bindables.removetask.value, null);
+		btnDelete.data = LangMan.instance.bindables.removetask;
 		attach(btnDelete);
 		btnDelete.name = data.value;
 		
