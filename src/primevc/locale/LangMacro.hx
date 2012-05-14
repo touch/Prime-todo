@@ -20,10 +20,8 @@ enum ElementType {
 
 class LangMacro 
 {
-	
-	
-	@:macro static public function buildInterface()  :Array<Field> 
-	{
+	@:macro public static function build() : Array<Field> 
+    {      
 		var pos = haxe.macro.Context.currentPos();
 		var fields = haxe.macro.Context.getBuildFields();
 		
@@ -38,10 +36,10 @@ class LangMacro
 				{
 					if ( file.indexOf(".yaml") > -1 )
 					{
-						 var data = YamlHX.read( neko.io.File.getContent( currentDir + "/" + file) );
-						 var key = data.x.firstChild().nodeName;
-						 
-						 langsRaw.set(key , data);
+						haxe.macro.Context.registerModuleDependency("primevc.locale.LangMacro", currentDir + "/" + file);
+						var data = YamlHX.read( neko.io.File.getContent( currentDir + "/" + file) );
+						var key = data.x.firstChild().nodeName;
+						langsRaw.set(key , data);
 					}
 				}
 			}
@@ -54,17 +52,17 @@ class LangMacro
 		}
 		
 		var t = { pack:[], pos:pos, meta:[], params:[], isExtern:false, kind:TDClass(), name:"LangManBindables", fields:[] };
-		
 		var constructorWords = "";
-
 		
+		var ILangInterfaceType = { pack:"primevc.locale".split("."), pos:pos, meta:[], params:[], isExtern:false, kind:TDClass(null,null,true), name:"ILang", fields:[] };
+
 		var list = [];
 		for (yaml in langsRaw) 
 		{
 			for (lang in yaml.elements)
 			{
 				// ILang interface generation. Also creates Typedefs.
-				list = list.concat ( traverseXMLInterface(lang, fields) );
+				list = list.concat ( traverseXMLInterface(lang, ILangInterfaceType.fields) );
 			}
 		}
 		
@@ -93,7 +91,7 @@ class LangMacro
 			Context.error( errorList.join("\n" ), pos );
 		}
 
-		var defaultLang = langsRaw.get("EnNZ");
+		var defaultLang = langsRaw.iterator().next();
 		
 		if (defaultLang == null) Context.error("Default language not defined", pos);
 		
@@ -102,42 +100,15 @@ class LangMacro
 		
 		t.fields.push( { meta:[], name:"new", doc:null, access:[APublic], kind:FFun( { args:[], ret:null, expr:Context.parse("{" + constructorWords + "}", pos), params:[] } ), pos:pos } );
 		
+		Context.defineType(ILangInterfaceType);
 		Context.defineType(t);
-	
-		return fields;
-	}
-	
-
-	@:macro public static function build() : Array<Field> 
-    {        
-		var pos = haxe.macro.Context.currentPos();
-		var fields = haxe.macro.Context.getBuildFields();
 		
-		var tint = TPath( { pack : [], name : "String", params : [], sub : null } );
-		
-		var langsRaw = new Hash<YamlHX>();
-		for ( dir in Context.getClassPath() )
-		{
-			var currentDir =  dir + "i18n";
-			if (neko.FileSystem.exists(currentDir))
-			{
-				for (file in  neko.FileSystem.readDirectory(currentDir) )
-				{
-					if ( file.indexOf(".yaml") > -1 )
-					{
-						langsRaw.set(file , YamlHX.read( neko.io.File.getContent( currentDir + "/" + file) ));
-					}
-				}
-			}
-		}
-		
-	
+		//build types
 		
 		for (yaml in langsRaw) // for yamls in yamls array
 		{
 			for (node in yaml.elements) //for each language in each yaml
 			{
-				
 				var t = { // create Class of Type NameLanguage (Ex Dutch,Spanish) implementing ILang
 				  kind:TDClass(null, [ { pack:"primevc.locale".split("."), name:"ILang", params:[ ], sub:null } ], false), name:node.name.capitalizeFirstLetter(),
 				  fields:[ ], pack: ["langMan"],  pos:pos, 	meta:[], params:[],	 isExtern:false //added langMan in pack,else Ill get TypeError: Error #1064: 
@@ -159,6 +130,7 @@ class LangMacro
 				Context.defineType(t);
 				
 				var cultureClassName = "thx.cultures." + node.name.capitalizeFirstLetter();
+				
 				try
 				{
 					Context.getType(cultureClassName);
@@ -174,11 +146,7 @@ class LangMacro
 				var expr = Context.parse("{this.current = new langMan." + node.name.capitalizeFirstLetter()  +"();" + exprUpdateValues + " thx.culture.Culture.defaultCulture = "+currentLang +"; this.change.send(); }", pos);
 				
 				fields.push( { name:node.name, doc:null, meta:[], access:[APublic], kind:FFun(  { args:[], ret:null, expr:expr, params:[] } ), pos:pos } );
-				
-				
-				
 			}
-			
 		}
 	
 		return fields;
@@ -509,6 +477,7 @@ class LangMacro
 	
 	static function traverseXMLFunction(xml:Fast, f:Null<Dynamic> -> Null<Dynamic>, ?optArray:Array<Dynamic>)
 	{
+		//TODO:
 		for (el in xml.elements) 
 		{
 			if ( isLeaf( el) )
