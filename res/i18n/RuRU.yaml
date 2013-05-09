@@ -1,20 +1,17 @@
 RuRU:
- apptitle: AppTitle Russian
+ apptitle: Prime ToDo
  opentasks: Открытые задания
  removetask: Remove Task
  addtask: Add Task
- test:
-  describe: !!func3
-   value: price: {0:C} tax: {1:C} || price+tax: {2:C}
+ tasktext: Enter Task here...
+ describe: value: price: {0:C} tax: {1:C} || price+tax: {2:C}
  ok: ok
+ languages: Languages
+ layouts: layouts
+ changeLayout: Change Layout
  g1:
-  ga: test
   comments: !!pl
    zero: {0:I} no comments
    0: {0:I} one Comment
    1: {0:I} Comments
    2: {0:I} Comments russian
-  g2:
-   g3:
-    test1: test 1 ruRU
-    test2: test2BBB

@@ -1,22 +1,15 @@
 package com.ezeql.primevc.examples.todoapp;
-import flash.text.TextFieldAutoSize;
-import primevc.core.Bindable;
 import primevc.gui.components.Button;
+import primevc.gui.components.DataButton;
+import primevc.gui.components.Form;
+import primevc.gui.components.InputField;
 import primevc.gui.components.Label;
-import primevc.gui.core.IUIDataElement;
+import primevc.gui.core.UIContainer;
 import primevc.gui.core.UITextField;
 import primevc.gui.core.UIWindow;
-import primevc.gui.display.TextField;
-import primevc.gui.components.InputField;
 import primevc.locale.LangMan;
 
-
-import primevc.gui.components.ListView;
-import primevc.core.collections.ArrayList;
-import primevc.gui.components.ListHolder;
-import primevc.gui.components.DataButton;
-import primevc.core.collections.ArrayList;
-import primevc.gui.components.ComboBox;
+using primevc.utils.Bind;
 /**
  * ...
  * @author EzeQL
@@ -24,56 +17,66 @@ import primevc.gui.components.ComboBox;
 
 class TodoGUI extends UIWindow
 {
-	private var english:Button;
-	private var spanish:Button;
-	private var dutch:Button;
-	private var russian:Button;
-	
+    
 	public var title:UITextField;
-	
 	public var listView:TodoList;
-	
 	public var input:InputField<String>;
-	
-	public var btnAccept:DataButton<String>;
-
+    public var addRandomTasksBtn:Button;
+	public var btnAddTask:Button;
 	public var openTasks:Label;
-
+    
+    public var changeLayout:Button;
+    
+    public  var optionsHolder:UIContainer;
+  	public  var englishBtn:Button;
+	public  var spanishBtn:Button;
+	public  var dutchBtn:Button;
+	public  var russianBtn:Button;
+    
+	
 	override private function createChildren():Void 
 	{
 		super.createChildren();
-		title = new UITextField("title", true, LangMan.instance.bindables.apptitle);
+        var bindables = LangMan.instance.bindables;
+		title = new UITextField("title", true, bindables.apptitle);
 		attach(title);
 	
-		input =  new InputField("input");
-		input.updateVO = function() {  if ( input.vo.value != input.data.value) input.vo.value = input.data.value; };
+		input = new InputField("input", LangMan.instance.current.tasktext);
 		attach(input);
 		
-		btnAccept = new DataButton<String>("btnAccept",  LangMan.instance.bindables.addtask.value, null);
-		btnAccept.data = LangMan.instance.bindables.addtask;
+		btnAddTask = new Button("btnAddTask");
+        btnAddTask.data  = bindables.addtask;
+        
+        
+        addRandomTasksBtn = new Button("addRandom", "randomData");
+        
+        var virtual = Form.createHorizontalRow();
 
-		attach(btnAccept);
+        virtual.attach(btnAddTask.layout);
+        virtual.attach(addRandomTasksBtn.layout);
+        virtual.attachTo(this.layoutContainer);
+        attachDisplay(btnAddTask);
+        attachDisplay(addRandomTasksBtn);
+        
+		
+		attach(listView = new TodoList("listView"));
+		
+		attach(openTasks = new Label("openTasks"));
+		
+        optionsHolder = new UIContainer("optionsHolder");
+        
+        var langsLbl = new Label("langsLbl", LangMan.instance.bindables.languages);
+		englishBtn = new Button("english", "English");
+		dutchBtn   = new Button("dutch"  , "Dutch");
+		spanishBtn = new Button("spanish", "Spanish");
+		russianBtn = new Button("russian", "Russian");
+        
+        var layoutsLbl = new Label("layoutsLbl", LangMan.instance.bindables.layouts);
+        changeLayout = new Button("changeLayout");
+        changeLayout.data  = LangMan.instance.bindables.changeLayout;
+        
+		optionsHolder.attach(langsLbl).attach(englishBtn).attach(dutchBtn).attach(spanishBtn).attach(russianBtn).attach(layoutsLbl).attach(changeLayout);
 
-		listView = new TodoList("listview");
-		attach(listView);
-		
-		openTasks = new Label("opentasks"); //TODO: Review this
-		attach(openTasks);
-		
-		english = new Button("english", "english");
-		dutch = new Button("dutch", "dutch");
-		spanish = new Button("spanish", "spanish");
-		russian = new Button("russian", "russian");
-		
-		attach(english); attach(dutch); attach(spanish);  attach(russian);
-
-		//english.userEvents.mouse.click.observe( this, function () { LangMan.instance.EnUS(); } );
-		//dutch.userEvents.mouse.click.observe  ( this, function () { LangMan.instance.NlNL(); } );
-		//spanish.userEvents.mouse.click.observe( this, function () { LangMan.instance.EsAR(); } );
-		//russian.userEvents.mouse.click.observe( this, function () { LangMan.instance.RuRU(); } );
-		//
-		
+        attach(optionsHolder);
 	}
-
-	
 }

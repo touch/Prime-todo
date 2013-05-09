@@ -2,20 +2,21 @@
 @manifest url('style.xml');
 
 Button			{ background: #aaa; color: #fff; skin: Class( primevc.gui.components.skins.ButtonLabelSkin ); }
-Button:hover	{ background: #faa; color: #000; }
+Button:hover	{ background: #faa; }
 
-TodoGUI 			{background: #CCCCCC; width:100%; height:100%; algorithm: float-ver(top,left); }
+TodoGUI 		{ background: #CCCCCC; algorithm: float-ver(top,center); }
 
-TodoGUI #title {width:100%; text-align:center; font: Verdana 50px
-; }
-TodoGUI #input {width:80%; text-align:center; font: Verdana 40px; }
-TodoGUI #input:hover {width:80%; text-align:center; font: Verdana 40px; }
+TodoGUI #title  { width:100%; text-align:center; font: Verdana 50px; }
+TodoGUI #btnAddTask{ margin-bottom:5px;}
+TodoGUI #input  { margin-bottom:5px; width:100%; text-align:left; font: Verdana 40px; }
+TodoGUI #input:hover { font: Verdana 40px; }
+TodoGUI #btnAddTask {padding:10px;}
 
-TodoGUI #listview  {width:100%; height:60%; background: #FFCCCC; algorithm: float-ver( top, left );}
+TodoGUI #listView  { overflow:scrollbars; background: #faa; width:800px; height:65%; algorithm: float-ver( top, left ); }
+
+TodoGUI #listView Button { margin: 3px;}
+
+TodoGUI #optionsHolder  { width:100%;  algorithm: float-hor(center,center ); }
+TodoGUI #optionsHolder Button { margin:5px 5px 5px 5px; }
 
 ListRow { algorithm: float-hor;}
-
-
-
-
-

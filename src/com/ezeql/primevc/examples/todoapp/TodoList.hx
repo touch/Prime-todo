@@ -10,12 +10,10 @@ import primevc.gui.components.ListView;
 class TodoList extends ListView<String>
 {
 
-	public function new(id) 
+	public function new(id:String = null ) 
 	{
 		super(id);
-		this.createItemRenderer =  function (a, b):IUIDataElement<String> { return cast new ListRow("listRow" + Std.string(b), a); };
-		
-
+		this.createItemRenderer = function (a, b):IUIDataElement<String> { return cast new ListRow("listRow" + Std.string(b), a); };
 	}
 	
 }

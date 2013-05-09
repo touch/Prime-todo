@@ -31,8 +31,6 @@ class TodoProxy extends Proxy < ArrayList<String>, TodoEvents >
 	private function updateOpenTaks() 
 	{
 		openTasks.value = LangMan.instance.bindables.opentasks.value + ":" + vo.length.string();
-		
-		
 	}
 	
 }

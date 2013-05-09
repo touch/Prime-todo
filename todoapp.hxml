@@ -1,0 +1,17 @@
+-cp src
+-cp ../primevc/PrimeVC/libs/haxe
+-cp ../primevc/PrimeVC/libs/apparat
+-cp test
+-cp res/i18n
+-cp ../Editor/shared/PrimeVC/src
+-cp ../Editor/shared/PrimeVC/libs/apparat
+-cp styles
+-lib feffects
+-lib thx
+-swf bin/todoapp.swf
+-swf-header 800:600:30:FFFFFF
+--flash-strict
+-swf-version 10.2
+-D dragEnabled
+-D no-pattern-matching
+-main Main
