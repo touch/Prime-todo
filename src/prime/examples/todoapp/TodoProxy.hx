@@ -1,4 +1,4 @@
-package com.ezeql.prime.examples.todoapp;
+package prime.examples.todoapp;
  import prime.bindable.Bindable;
  import prime.bindable.collections.ArrayList;
  import prime.locale.LangMan;

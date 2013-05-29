@@ -1,4 +1,4 @@
-package com.ezeql.prime.examples.todoapp;
+package prime.examples.todoapp;
  import prime.mvc.IMVCCoreActor;
  import prime.mvc.MVCActor;
 

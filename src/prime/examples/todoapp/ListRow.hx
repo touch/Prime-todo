@@ -1,4 +1,4 @@
-package com.ezeql.prime.examples.todoapp;
+package prime.examples.todoapp;
  import prime.bindable.Bindable;
  import prime.gui.components.Button;
  import prime.gui.components.DataButton;

@@ -1,4 +1,4 @@
-package com.ezeql.prime.examples.todoapp;
+package prime.examples.todoapp;
 
  import prime.core.traits.IDisposable;
  import prime.locale.LangMan;
