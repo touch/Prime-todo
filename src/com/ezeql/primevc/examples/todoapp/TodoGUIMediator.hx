@@ -1,29 +1,27 @@
-package com.ezeql.primevc.examples.todoapp;
-import primevc.core.collections.ArrayList;
-import primevc.core.geom.space.Direction;
-import primevc.core.geom.space.Horizontal;
-import primevc.core.geom.space.Vertical;
-import primevc.gui.core.UIElementFlags;
-import primevc.gui.layout.algorithms.circle.HorizontalCircleAlgorithm;
-import primevc.gui.layout.algorithms.circle.VerticalCircleAlgorithm;
-import primevc.gui.layout.algorithms.float.HorizontalFloatAlgorithm;
-import primevc.gui.layout.algorithms.ILayoutAlgorithm;
-import primevc.gui.layout.algorithms.LayoutAlgorithmBase;
-import primevc.gui.layout.algorithms.tile.SimpleTileAlgorithm;
-
-import primevc.locale.LangMan;
-
-using primevc.utils.Bind;
-using Std;
+package com.ezeql.prime.examples.todoapp;
+ import prime.bindable.collections.ArrayList;
+ import prime.core.geom.space.Direction;
+ import prime.core.geom.space.Horizontal;
+ import prime.core.geom.space.Vertical;
+ import prime.gui.core.UIElementFlags;
+ import prime.layout.algorithms.circle.HorizontalCircleAlgorithm;
+ import prime.layout.algorithms.float.HorizontalFloatAlgorithm;
+ import prime.layout.algorithms.ILayoutAlgorithm;
+ import prime.layout.algorithms.LayoutAlgorithmBase;
+ import prime.layout.algorithms.tile.SimpleTileAlgorithm;
+ import prime.layout.algorithms.circle.HorizontalCircleAlgorithm;
+ import prime.locale.LangMan;
+  using prime.utils.Bind;
+  using Std;
+  
 /**
  * ...
  * @author EzeQL
  */
 
-class TodoGUIMediator extends primevc.mvc.Mediator<TodoFacade,TodoGUI>
+class TodoGUIMediator extends prime.mvc.Mediator<TodoFacade,TodoGUI>
 {
-
-    private var algos:Array<ILayoutAlgorithm >;
+    private var algos:Array<ILayoutAlgorithm>;
 	override public function startListening ()
     {
         if (isListening())
@@ -34,7 +32,6 @@ class TodoGUIMediator extends primevc.mvc.Mediator<TodoFacade,TodoGUI>
         input.updateVO = function() { if ( input.vo.value != input.data.value) input.vo.value = input.data.value; };
 		addTask.on(gui.btnAddTask.userEvents.mouse.click, this);
 		gui.openTasks.data.bind( f.model.todoProxy.openTasks);
-        
         
         addRandomTasks.on(gui.addRandomTasksBtn.userEvents.mouse.click, this);
         changeLayout.on(gui.changeLayout.userEvents.mouse.click, this);
@@ -47,7 +44,6 @@ class TodoGUIMediator extends primevc.mvc.Mediator<TodoFacade,TodoGUI>
         algos = new Array<ILayoutAlgorithm>();
         algos.push(gui.listView.layoutContainer.algorithm);
         algos.push(new HorizontalFloatAlgorithm(Horizontal.left, Vertical.top));
-        //algos.push(new HorizontalCircleAlgorithm(Horizontal.center, Vertical.center,false));
         algos.push(new SimpleTileAlgorithm(Direction.horizontal));
         algos.push(new SimpleTileAlgorithm(Direction.vertical));
 	}
@@ -65,10 +61,8 @@ class TodoGUIMediator extends primevc.mvc.Mediator<TodoFacade,TodoGUI>
     private inline function guid()
     {
         var n = "rnd" + Math.floor(Math.random() * 0x10000);
-        
         return n.string();
     }
-    
 
     private function changeLayout() 
     {

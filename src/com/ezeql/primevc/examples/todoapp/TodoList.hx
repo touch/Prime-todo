@@ -1,19 +1,20 @@
-package com.ezeql.primevc.examples.todoapp;
-import primevc.gui.core.IUIDataElement;
-import primevc.gui.components.ListView;
+package com.ezeql.prime.examples.todoapp;
+ import prime.gui.core.IUIDataElement;
 
 /**
  * ...
  * @author EzeQL
  */
 
-class TodoList extends ListView<String>
+class TodoList extends prime.gui.components.ListView<String>
 {
 
 	public function new(id:String = null ) 
 	{
 		super(id);
-		this.createItemRenderer = function (a, b):IUIDataElement<String> { return cast new ListRow("listRow" + Std.string(b), a); };
+		this.createItemRenderer =   function (a, b):IUIDataElement<String> { 
+                                        return cast new ListRow("listRow" + Std.string(b), a); 
+                                    };
 	}
 	
 }

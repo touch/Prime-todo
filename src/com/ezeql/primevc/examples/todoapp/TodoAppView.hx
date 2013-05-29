@@ -1,8 +1,8 @@
-package com.ezeql.primevc.examples.todoapp;
-import com.ezeql.primevc.examples.todoapp.TodoGUIMediator;
-import flash.Lib;
-import primevc.mvc.IMVCCoreActor;
-import primevc.mvc.MVCActor;
+package com.ezeql.prime.examples.todoapp;
+ import com.ezeql.prime.examples.todoapp.TodoGUIMediator;
+ import flash.Lib;
+ import prime.mvc.IMVCCoreActor;
+ import prime.mvc.MVCActor;
 
 /**
  * ...
@@ -22,5 +22,4 @@ class TodoAppView extends MVCActor<TodoFacade>, implements IMVCCoreActor
 		todoGUIMediator = new TodoGUIMediator(facade, true, gui);
 		todoListMediator = new TodoListMediator(facade, true, gui.listView); 
 	}
-	
 }

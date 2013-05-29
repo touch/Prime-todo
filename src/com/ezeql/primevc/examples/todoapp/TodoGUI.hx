@@ -1,16 +1,16 @@
-package com.ezeql.primevc.examples.todoapp;
-import primevc.gui.components.Button;
-import primevc.gui.components.DataButton;
-import primevc.gui.components.Form;
-import primevc.gui.components.InputField;
-import primevc.gui.components.Label;
-import primevc.gui.core.UIContainer;
-import primevc.gui.core.UITextField;
-import primevc.gui.core.UIWindow;
-import primevc.locale.LangMan;
+package com.ezeql.prime.examples.todoapp;
+ import prime.gui.components.Button;
+ import prime.gui.components.DataButton;
+ import prime.gui.components.Form;
+ import prime.gui.components.InputField;
+ import prime.gui.components.Label;
+ import prime.gui.core.UIContainer;
+ import prime.gui.core.UITextField;
+ import prime.gui.core.UIWindow;
+ import prime.locale.LangMan;
+  using prime.utils.Bind;
 
-using primevc.utils.Bind;
-/**
+ /**
  * ...
  * @author EzeQL
  */
@@ -47,20 +47,16 @@ class TodoGUI extends UIWindow
 		btnAddTask = new Button("btnAddTask");
         btnAddTask.data  = bindables.addtask;
         
-        
         addRandomTasksBtn = new Button("addRandom", "randomData");
         
         var virtual = Form.createHorizontalRow();
-
         virtual.attach(btnAddTask.layout);
         virtual.attach(addRandomTasksBtn.layout);
         virtual.attachTo(this.layoutContainer);
         attachDisplay(btnAddTask);
         attachDisplay(addRandomTasksBtn);
         
-		
 		attach(listView = new TodoList("listView"));
-		
 		attach(openTasks = new Label("openTasks"));
 		
         optionsHolder = new UIContainer("optionsHolder");

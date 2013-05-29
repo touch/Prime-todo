@@ -1,6 +1,6 @@
-package com.ezeql.primevc.examples.todoapp;
-import primevc.mvc.IMVCCoreActor;
-import primevc.mvc.MVCActor;
+package com.ezeql.prime.examples.todoapp;
+ import prime.mvc.IMVCCoreActor;
+ import prime.mvc.MVCActor;
 
 /**
  * ...
@@ -9,13 +9,11 @@ import primevc.mvc.MVCActor;
 
 class TodoController  extends MVCActor<TodoFacade>, implements IMVCCoreActor
 {
-
 	public function new(facade) 
 	{
 		super(facade);
-		
 	}
-	
+
 	override function startListening()
 	{
 		f.model.init(f.events);

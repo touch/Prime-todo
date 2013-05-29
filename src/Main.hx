@@ -1,12 +1,9 @@
 package ;
-
-import com.ezeql.primevc.examples.todoapp.TodoFacade;
-import flash.display.StageAlign;
-import flash.display.StageScaleMode;
-import flash.Lib;
-import primevc.core.dispatcher.Signal0;
-import primevc.locale.ILang;
-import primevc.locale.LangMan;
+ import flash.display.StageAlign;
+ import flash.display.StageScaleMode;
+ import flash.Lib;
+ import prime.signals.Signal0;
+ import prime.locale.LangMan;
 
 /**
  * ...
@@ -28,12 +25,7 @@ class Todo
 		var stage = Lib.current.stage;
 		stage.scaleMode = StageScaleMode.NO_SCALE;
 		stage.align = StageAlign.TOP_LEFT;
-//
-		var f = new TodoFacade();
+        var f = new com.ezeql.prime.examples.todoapp.TodoFacade();
 		f.start();
-	
-		
-		
 	}
-
 }

@@ -1,14 +1,11 @@
-package com.ezeql.primevc.examples.todoapp;
-
-import primevc.mvc.IMVCCore;
-import primevc.mvc.MVCNotifier;
-
+package com.ezeql.prime.examples.todoapp;
+ 
 /**
  * ...
  * @author EzeQL
  */
 
-class TodoModel extends MVCNotifier, implements IMVCCore
+class TodoModel extends prime.mvc.MVCNotifier, implements prime.mvc.IMVCCore
 {
 	public var todoProxy(default, null):TodoProxy;
 

@@ -1,8 +1,7 @@
-package com.ezeql.primevc.examples.todoapp;
-
-import primevc.gui.components.Button;
-import primevc.gui.components.DataButton;
-import primevc.gui.events.MouseEvents;
+package com.ezeql.prime.examples.todoapp;
+ import prime.gui.components.Button;
+ import prime.gui.components.DataButton;
+ import prime.gui.events.MouseEvents;
 
 
 /**
@@ -10,9 +9,8 @@ import primevc.gui.events.MouseEvents;
  * @author EzeQL
  */
 
-class TodoListMediator extends primevc.mvc.Mediator<TodoFacade,TodoList>
+class TodoListMediator extends prime.mvc.Mediator<TodoFacade,TodoList>
 {
-
 	override public function startListening ()
     {
         if (isListening())

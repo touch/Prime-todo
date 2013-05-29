@@ -1,14 +1,12 @@
-package com.ezeql.primevc.examples.todoapp;
-import primevc.core.Bindable;
-import primevc.core.collections.ArrayList;
-import primevc.locale.LangMan;
-import primevc.mvc.Proxy;
-import primevc.utils.FastArray;
+package com.ezeql.prime.examples.todoapp;
+ import prime.bindable.Bindable;
+ import prime.bindable.collections.ArrayList;
+ import prime.locale.LangMan;
+ import prime.mvc.Proxy;
+ import prime.utils.FastArray;
+  using prime.utils.Bind;
+  using Std;
 
-using primevc.utils.Bind;
-using Std;
-
-/**
 /**
  * ...
  * @author EzeQL
@@ -32,5 +30,4 @@ class TodoProxy extends Proxy < ArrayList<String>, TodoEvents >
 	{
 		openTasks.value = LangMan.instance.bindables.opentasks.value + ":" + vo.length.string();
 	}
-	
 }
