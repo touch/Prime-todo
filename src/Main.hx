@@ -25,7 +25,7 @@ class Todo
 		var stage = Lib.current.stage;
 		stage.scaleMode = StageScaleMode.NO_SCALE;
 		stage.align = StageAlign.TOP_LEFT;
-        var f = new com.ezeql.prime.examples.todoapp.TodoFacade();
+        var f = new prime.examples.todoapp.TodoFacade();
 		f.start();
 	}
 }
