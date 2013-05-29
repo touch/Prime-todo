@@ -1,7 +1,7 @@
 @import url('BasicStyle.css');
 @manifest url('style.xml');
 
-Button			{ background: #aaa; color: #fff; skin: Class( primevc.gui.components.skins.ButtonLabelSkin ); }
+Button			{ background: #aaa; color: #fff; skin: Class( prime.gui.components.skins.ButtonLabelSkin ); }
 Button:hover	{ background: #faa; }
 
 TodoGUI 		{ background: #CCCCCC; algorithm: float-ver(top,center); }
