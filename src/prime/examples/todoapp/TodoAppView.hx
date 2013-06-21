@@ -1,15 +1,13 @@
 package prime.examples.todoapp;
- import prime.examples.todoapp.TodoGUIMediator;
  import flash.Lib;
- import prime.mvc.IMVCCoreActor;
- import prime.mvc.MVCActor;
+ import prime.examples.todoapp.TodoGUIMediator;
 
 /**
  * ...
  * @author EzeQL
  */
 
-class TodoAppView extends MVCActor<TodoFacade>, implements IMVCCoreActor
+class TodoAppView extends prime.mvc.MVCActor<TodoFacade> implements prime.mvc.IMVCCoreActor
 {
 	public var todoListMediator:TodoListMediator;
 	public var todoGUIMediator:TodoGUIMediator;

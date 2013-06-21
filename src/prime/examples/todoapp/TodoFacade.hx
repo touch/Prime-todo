@@ -1,7 +1,6 @@
 package prime.examples.todoapp;
 
  import prime.core.traits.IDisposable;
- import prime.locale.LangMan;
  import prime.mvc.Facade;
 
 /**
@@ -13,7 +12,6 @@ class TodoFacade extends Facade < TodoEvents, TodoModel, IDisposable, TodoContro
 {
 	public function new() 
 	{
-		LangMan.instance.NlNL();
 		super();
 	}
 

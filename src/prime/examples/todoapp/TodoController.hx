@@ -7,7 +7,7 @@ package prime.examples.todoapp;
  * @author EzeQL
  */
 
-class TodoController  extends MVCActor<TodoFacade>, implements IMVCCoreActor
+class TodoController  extends MVCActor<TodoFacade> implements IMVCCoreActor
 {
 	public function new(facade) 
 	{

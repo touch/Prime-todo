@@ -5,12 +5,11 @@ package prime.examples.todoapp;
  import prime.core.geom.space.Vertical;
  import prime.gui.core.UIElementFlags;
  import prime.layout.algorithms.circle.HorizontalCircleAlgorithm;
- import prime.layout.algorithms.float.HorizontalFloatAlgorithm;
+ import prime.layout.algorithms.floating.HorizontalFloatAlgorithm;
  import prime.layout.algorithms.ILayoutAlgorithm;
  import prime.layout.algorithms.LayoutAlgorithmBase;
  import prime.layout.algorithms.tile.SimpleTileAlgorithm;
  import prime.layout.algorithms.circle.HorizontalCircleAlgorithm;
- import prime.locale.LangMan;
   using prime.utils.Bind;
   using Std;
   
@@ -35,11 +34,6 @@ class TodoGUIMediator extends prime.mvc.Mediator<TodoFacade,TodoGUI>
         
         addRandomTasks.on(gui.addRandomTasksBtn.userEvents.mouse.click, this);
         changeLayout.on(gui.changeLayout.userEvents.mouse.click, this);
-        
-        LangMan.instance.EnUS.on(gui.englishBtn.userEvents.mouse.click, this);
-		LangMan.instance.NlNL.on(gui.dutchBtn.userEvents.mouse.click, this);
-		LangMan.instance.EsAR.on(gui.spanishBtn.userEvents.mouse.click, this);
-		LangMan.instance.RuRU.on(gui.russianBtn.userEvents.mouse.click, this);
         
         algos = new Array<ILayoutAlgorithm>();
         algos.push(gui.listView.layoutContainer.algorithm);

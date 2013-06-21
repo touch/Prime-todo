@@ -1,11 +1,8 @@
 package prime.examples.todoapp;
  import prime.bindable.Bindable;
- import prime.gui.components.Button;
  import prime.gui.components.DataButton;
  import prime.gui.components.Label;
  import prime.gui.core.UIDataContainer;
- import prime.locale.LangMan;
-  using prime.utils.Bind;
 
 /**
  * ...
@@ -27,9 +24,9 @@ class ListRow extends UIDataContainer <DataType>
 		lblTask = new Label("label" + this.id, new Bindable<String>(data.value) );
 		attach(lblTask);
 
-		btnDelete = new DataButton<String>("b" + this.id, LangMan.instance.bindables.removetask.value, null);
-		btnDelete.data = LangMan.instance.bindables.removetask;
-		attach(btnDelete);
+		btnDelete = new DataButton<String>("b" + this.id,"delete task");
 		btnDelete.name = data.value;
+		attach(btnDelete);
+		
 	}
 }

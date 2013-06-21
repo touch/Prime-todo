@@ -2,8 +2,6 @@ package ;
  import flash.display.StageAlign;
  import flash.display.StageScaleMode;
  import flash.Lib;
- import prime.signals.Signal0;
- import prime.locale.LangMan;
 
 /**
  * ...
