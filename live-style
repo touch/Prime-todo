@@ -1,0 +1,9 @@
+#!/bin/sh
+#haxe -cp Prime/prime-css/src -neko style-change-watcher.n -main StyleReloader neko style-change-watcher.n styles/minimal build/minimal-stylesheet.hxml -swf bin-debug
+
+#rm reload.n
+
+haxe -cp C:/Work/Editor/Prime -cp C:/Work/Editor/Prime/prime-css/src -neko style-change-watcher.n -main StyleReloader &&\
+	neko style-change-watcher.n styles styles/StyleSheet.hxml -swf bin
+
+rm reload.n

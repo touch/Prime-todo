@@ -1,0 +1,83 @@
+
+-lib feffects
+-lib format
+-lib hxmpp
+
+-cp C:/Work/Editor/Prime
+
+-cp Prime/prime-core/src 
+-cp Prime/prime-signals/src
+-cp Prime/prime-bindable/src 
+-cp Prime/prime-data/src 
+-cp Prime/prime-locale/src 
+-cp Prime/prime-fsm/src 
+-cp Prime/prime-mvc/src
+-cp Prime/prime-display/src 
+-cp Prime/prime-layout/src 
+-cp Prime/prime-media/src 
+-cp Prime/prime-components/src 
+-cp Prime/prime-css/src 
+
+-cp shared/src/main/haxe
+-cp shared/generated-src/haxe
+
+-D prime_core
+-D prime_signals
+-D prime_bindable
+-D prime_data
+-D prime_locale
+-D prime_fsm
+-D prime_mvc
+-D prime_display
+-D prime_layout
+-D prime_media
+-D prime_components
+-D prime_css
+-D prime_net
+
+-cp Prime/libs/jac
+-cp Prime/libs/apparat
+-cp Prime/libs/thx/src
+-cp Prime/libs/swfaddress
+-cp Prime/libs/macmousewheel
+-cp Prime/libs/hxmpp
+
+
+#///////////////////////////////////////////////////////////////////////
+
+-cp src
+-swf-version 11
+--flash-strict
+
+--times
+
+#//////////////////////////////////////////////////////////////////////
+
+-D dragEnabled
+-D minimal
+-D display
+
+-cp styles
+
+--connect 6543
+
+--macro haxe.macro.Compiler.exclude('prime')
+--macro haxe.macro.Compiler.exclude('assets')
+
+#//////////////////////////////////////////////////////////////////////
+-cp Prime/libs/alcon
+-cp Prime/libs/framestats
+-cp Prime/libs/hiresStats
+-cp Prime/libs/monsterdebugger
+-cp Prime/prime-perceptor/src
+
+-swf-lib Prime/assets/debug-assets.swf
+-swf-lib assets/debug-lib.swf
+
+-D prime_perceptor
+-D embed_perceptor
+-D noinline
+-D debug
+-debug
+
+StyleSheet
