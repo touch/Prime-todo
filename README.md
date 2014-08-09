@@ -6,6 +6,8 @@ using [Bindable](https://github.com/touch/PrimeVC/tree/master/prime-bindable) co
 
 The [Layout](http://prime.vc/documentation/layout.html) of tasks can be switched and shows how to switch [algorithms](http://prime.vc/documentation/layout_algorithms.html) at runtime.
 
+Note that [NodeJS](http://nodejs.org/download/) must be installed in order to compile this application.
+
 #### Roadmap
 
 1. Demonstrate the use of prime-i18n
